@@ -1,0 +1,162 @@
+---
+- name: config conda
+  hosts: "{{ vhost | default('localhost') }}"
+  become: yes
+
+  tasks:
+    - name: create group jupyterhub
+      group:
+        name: jupyterhub
+        state: present
+
+    - name: create user jupyterhub
+      user:
+        name: jupyterhub
+        group: jupyterhub
+        shell: /bin/bash
+        home: /var/lib/jupyterhub
+
+    - name: download anaconda3
+      get_url:
+        url: https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
+        dest: /tmp/anaconda3.sh
+        mode: "u=rwx,g=rwx,o=rx"
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install anaconda
+      command: "/tmp/anaconda3.sh -b -p /var/lib/jupyterhub/anaconda -u -s -f"
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: change permissions to anaconda directory
+      file:
+        path: /var/lib/jupyterhub/anaconda
+        owner: jupyterhub
+        group: jupyterhub
+        mode: "u=rwx,g=rwx"
+        recurse: yes
+
+    - name: update conda
+      command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install jupyterhub
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge jupyterhub
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install notebook
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y notebook
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install jupyterlab
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y jupyterlab
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install sudospawner
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge sudospawner
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install @jupyterlab/hub-extension
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install @jupyterlab/hub-extension
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install ipyml
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge ipympl
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install widgetsnbextension
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge widgetsnbextension
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install @jupyter-widgets/jupyterlab-manager
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: install jupyter-matplotlib
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install jupyter-matplotlib
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
+
+    - name: update sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: 'jupyterhub ALL=(%jupyterhub) NOPASSWD: /var/lib/jupyterhub/anaconda/bin/sudospawner'
+
+    - name: create group shadow
+      group:
+        name: shadow
+        state: present
+
+    - name: add user jupyterhub to group shadow and users
+      user:
+         name: jupyterhub
+         groups: shadow,users
+         append: yes
+
+    - name: add user peregrinus to jupyterhub
+      user:
+         name: peregrinus
+         groups: jupyterhub
+         append: yes
+
+    - name: change shadow file
+      file:
+        path: /etc/shadow
+        group: shadow
+        mode: "u=rw,g=r"
+
+    - name: generate cert to jupyterhub
+      command: openssl req -x509 -nodes -days 365 -newkey rsa:4096 -keyout /var/lib/jupyterhub/jupyterhub.key -out /var/lib/jupyterhub/jupyterhub.crt  -subj "/C=BR/ST=.../L=.../O=.../OU=.../CN=.../emailAddress=retiarus@gmail.com"
+
+    - name: copy config file
+      copy:
+        src: ./files/jupyterhub_config.py
+        dest: /var/lib/jupyterhub/jupyterhub_config.py
+        owner: jupyterhub
+        group: jupyterhub
+
+    - name: copy sudospawner-singleuser
+      copy:
+        src: ./files/sudospawner-singleuser
+        dest: /var/lib/jupyterhub/anaconda/bin/sudospawner-singleuser
+        owner: jupyterhub
+        group: jupyterhub
+        mode: "g=rx,o=rx"
+
+    - name: copy jupyterhub.service
+      copy:
+        src: ./files/jupyterhub.service
+        dest: /etc/systemd/system/jupyterhub.service
+        owner: root
+        group: root
+
+    - name: change user to /var/lib/jupyterhub
+      file:
+        path: "/var/lib/jupyterhub"
+        owner: jupyterhub
+        group: jupyterhub
+        state: directory
+        mode: "u=rwx,g=rwx"
+        recurse: yes
