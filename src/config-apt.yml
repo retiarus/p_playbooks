@@ -131,6 +131,14 @@
         enabled: yes
         state: started
 
+    - name: install pipenv
+      pip:
+        name: pipenv
+        executable: pip2
+      become: yes
+      ansible_become_method: sudo
+      become_user: peregrinus
+
 
         #    - name: install openntpd
         #      apt:
