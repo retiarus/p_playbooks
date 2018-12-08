@@ -1,0 +1,4 @@
+#!/bin/bash -l
+
+# Delegate the notebook server launch to the jupyter-labhub script.
+exec "/var/lib/jupyterhub/anaconda/bin/jupyter-labhub" $@

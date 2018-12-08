@@ -1,0 +1,9 @@
+/mnt/falco02/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@falco02\:/home/peregrinus
+
+/mnt/falco03/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@falco03\:/home/peregrinus
+
+/mnt/falco06/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@falco06\:/home/peregrinus
+
+/mnt/Downloads -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@192.168.5.250\:/server/var/lib/deluge/Downloads
+
+/mnt/Arquivos-midias -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,sshfs_debug,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@192.168.5.250\:/server/Arquivos-midias

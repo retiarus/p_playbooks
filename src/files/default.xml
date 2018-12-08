@@ -1,0 +1,14 @@
+<!--
+WARNING: THIS IS AN AUTO-GENERATED FILE. CHANGES TO IT ARE LIKELY TO BE
+OVERWRITTEN AND LOST. Changes to this xml configuration should be made using:
+  virsh net-edit default
+or other application using the libvirt API.
+-->
+
+<network>
+  <name>default</name>
+  <uuid>55746bed-b76a-4dd5-9c90-549d4dae37f1</uuid>
+  <forward mode='nat'/>
+  <bridge name='br0' stp='on' delay='0'/>
+  <mac address='52:54:00:66:bf:21'/>
+</network>
