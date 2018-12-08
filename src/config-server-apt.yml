@@ -1,0 +1,36 @@
+---
+- name: configure server
+  hosts: localhost
+  become: yes
+
+  tasks:
+    - name: install lvm2
+      apt:
+        name: apt
+        state: present
+
+    - name: install openvpn
+      apt:
+         name: openvpn
+         state: present
+
+    - name: install deluge
+      apt:
+         name: deluge
+         state: present
+
+    - name: install dnsmasq
+      apt:
+         name: dnsmasq
+         state: present
+
+    - name: install lighttpd
+      apt:
+         name: lighttpd
+         state: present
+
+    - name: install flexget
+      pip:
+         name: flexget
+         executable: pip2
+
