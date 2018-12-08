@@ -135,10 +135,19 @@
       pip:
         name: pipenv
         executable: pip2
+        extra_args: --user
       become: yes
       ansible_become_method: sudo
       become_user: peregrinus
 
+    - name: install virtualenvwrapper
+      pip:
+        name: virtualenvwrapper
+        executable: pip2
+        extra_args: --user
+      become: yes
+      ansible_become_method: sudo
+      become_user: peregrinus
 
         #    - name: install openntpd
         #      apt:
