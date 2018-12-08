@@ -1,0 +1,148 @@
+---
+- name: Install basic aplications
+  hosts: "{{ vhost | default('localhost') }}"
+  become: yes
+  vars:
+    packages:
+      - autofs
+      - sshfs
+      - openssh-server
+      - openssh-client
+      - vim-gtk3
+      - zsh
+      - tmux
+      - syslog-ng
+      - synergy
+      - git
+      - python3-pip
+      - python-pip
+      - bridge-utils
+      - ansible
+      - docker
+      - lxc
+      - lxd
+      - ifenslave
+      - virt-manager
+      - npm
+      - openssl
+      - openntpd
+      - wget
+      - curl
+      - virtualenv
+
+  tasks:
+
+    - name: install aptitude
+      apt:
+        name: aptitude
+        state: present
+
+    - name: Upgrade all packges to the last version
+      apt:
+        name: "*"
+        state: latest
+
+    - name: Upgrade all packges
+      apt:
+        upgrade: dist
+
+    - name: install {{ item }}
+      apt: name={{ item }} state=present
+      with_items: '{{packages}}'
+      ignore_errors: yes
+
+    - name: set default shell to zsh
+      user:
+        name: peregrinus
+        shell: /bin/zsh
+
+    - name: enable service syslog-ng
+      systemd:
+        name: syslog-ng
+        enabled: yes
+
+    - name: start service syslog-ng
+      systemd:
+        name: syslog-ng
+        state: started
+
+    - name: stop and disabled service lxc
+      systemd:
+        name: lxc
+        enabled: no
+        state: stopped
+
+    - name: stop and disabled service lxd
+      systemd:
+        name: lxd
+        enabled: no
+        state: stopped
+
+    - name: stop and disabled service lxc-net
+      systemd:
+        name: lxc-net
+        enabled: no
+        state: stopped
+
+    - name: stop and disabled service lxcfs
+      systemd:
+        name: lxcfs
+        enabled: no
+        state: stopped
+
+    - name: config network to libvirt
+      copy:
+        src: ./files/default.xml
+        dest: /etc/libvirt/qemu/networks/default.xml
+        owner: root
+        group: root
+
+    - name: crete dir's to home in mnt
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: peregrinus
+        group: users
+      with_items:
+        - '/mnt/falco02/home'
+        - '/mnt/falco03/home'
+        - '/mnt/falco06/home'
+
+    - name: Create a 4096-bit SSH key for user peregrinus
+      user:
+        name: peregrinus
+        generate_ssh_key: yes
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa
+
+    - name: copy auto.sshfs
+      copy:
+        src: ./files/auto.sshfs
+        dest: /etc/auto.sshfs
+
+    - name: copy auto.master
+      copy:
+        src: ./files/auto.master
+        dest: /etc/auto.master
+
+    - name: enable and start service autofs
+      systemd:
+        name: autofs
+        enabled: yes
+        state: started
+
+
+        #    - name: install openntpd
+        #      apt:
+        #        name: openntpd
+        #        state: present
+        #
+        #    - name: enable service openntpd
+        #      systemd:
+        #        name: ntpd
+        #        enabled: yes
+        #
+        #    - name: start service openntpd
+        #      systemd:
+        #        name: ntpd
+        #        state: started
