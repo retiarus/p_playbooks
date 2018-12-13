@@ -29,6 +29,7 @@
       - wget
       - curl
       - virtualenv
+      - docker.io
 
   tasks:
 
