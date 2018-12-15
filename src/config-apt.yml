@@ -30,6 +30,11 @@
       - curl
       - virtualenv
       - docker.io
+      - exuberant-ctags
+      - awesome
+      - sakura
+      - uget
+      - mate-desktop-environment
 
   tasks:
 
