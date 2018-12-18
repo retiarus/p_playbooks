@@ -155,6 +155,12 @@
       ansible_become_method: sudo
       become_user: peregrinus
 
+    - name: add user peregrinus to dialout
+      user:
+        name: peregrinus
+        group: dialout
+        append: yes
+
         #    - name: install openntpd
         #      apt:
         #        name: openntpd
