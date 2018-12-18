@@ -113,6 +113,7 @@
         - '/mnt/falco02/home'
         - '/mnt/falco03/home'
         - '/mnt/falco06/home'
+      ignore_errors: yes
 
     - name: Create a 4096-bit SSH key for user peregrinus
       user:
