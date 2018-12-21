@@ -35,6 +35,8 @@
       - sakura
       - uget
       - mate-desktop-environment
+      - pluma
+      - nodejs
 
   tasks:
 
