@@ -1,6 +1,6 @@
 ---
 - name: config conda
-  hosts: "{{ vhost | default('localhost') }}"
+  hosts: "{{ vhost | default('spark') }}"
   become: yes
   become_user: root
 
@@ -31,6 +31,7 @@
       become: yes
       ansible_become_method: sudo
       become_user: jupyterhub
+      ignore_errors: yes
 
     - name: change permissions to anaconda directory
       file:
