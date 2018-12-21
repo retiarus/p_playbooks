@@ -143,7 +143,7 @@
     - name: install pipenv
       pip:
         name: pipenv
-        executable: pip2
+        executable: pip3
         extra_args: --user
       become: yes
       ansible_become_method: sudo
