@@ -1,8 +1,9 @@
 ---
 - name: config conda
-  hosts: "{{ vhost | default('spark') }}"
+  hosts: "{{ vhost | default('localhost') }}"
   become: yes
   become_user: root
+  ansible_become_method: sudo
 
   tasks:
     - name: create group jupyterhub
