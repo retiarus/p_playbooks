@@ -2,6 +2,7 @@
 - name: Install basic aplications
   hosts: "{{ vhost | default('localhost') }}"
   become: yes
+  become_user: root
   vars:
     packages:
       - autofs
@@ -165,6 +166,18 @@
         name: peregrinus
         group: dialout
         append: yes
+
+    - name: clone p_dotfiles
+      git:
+        repo: 'https://github.com/retiarus/p_dotfiles'
+        dest: "{{ user_dotfiles | default('/home/peregrinus/p_dotfiles') }}"
+        clone: yes
+        update: yes
+        recursive: yes
+        force: yes
+      ansible_become_method: sudo
+      become_user: peregrinus
+      ignore_errors: yes
 
         #    - name: install openntpd
         #      apt:
