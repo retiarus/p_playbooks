@@ -148,6 +148,7 @@
       become: yes
       ansible_become_method: sudo
       become_user: peregrinus
+      ignore_errors: yes
 
     - name: install virtualenvwrapper
       pip:
@@ -157,6 +158,7 @@
       become: yes
       ansible_become_method: sudo
       become_user: peregrinus
+      ignore_errors: yes
 
     - name: add user peregrinus to dialout
       user:
