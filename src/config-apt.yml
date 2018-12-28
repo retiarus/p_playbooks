@@ -140,21 +140,14 @@
         enabled: yes
         state: started
 
-    - name: install pipenv
+    - name: install pipenv, virtualenvwrapper
       pip:
         name: pipenv
         executable: pip3
         extra_args: --user
-      become: yes
-      ansible_become_method: sudo
-      become_user: peregrinus
-      ignore_errors: yes
-
-    - name: install virtualenvwrapper
-      pip:
-        name: virtualenvwrapper
-        executable: pip3
-        extra_args: --user
+      with_items:
+        - pipenv
+        - virtualenvwrapper
       become: yes
       ansible_become_method: sudo
       become_user: peregrinus
