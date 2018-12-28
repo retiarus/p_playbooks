@@ -3,7 +3,6 @@
   hosts: "{{ vhost | default('localhost') }}"
   become: yes
   become_user: root
-  ansible_become_method: sudo
 
   tasks:
     - name: create group jupyterhub
@@ -15,12 +14,18 @@
       user:
         name: jupyterhub
         group: jupyterhub
-        shell: /bin/bash
+        shell: /bin/false
         home: /var/lib/jupyterhub
 
-    - name: download anaconda3
+    - name: add user peregrinus to jupyterhub
+      user:
+         name: peregrinus
+         groups: jupyterhub
+         append: yes
+
+    - name: download miniconda3
       get_url:
-        url: https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
+        url: https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
         dest: /tmp/anaconda3.sh
         mode: "u=rwx,g=rwx,o=rx"
       become: yes
@@ -29,17 +34,35 @@
 
     - name: install anaconda
       command: "/tmp/anaconda3.sh -b -p /var/lib/jupyterhub/anaconda -u -s -f"
+      args:
+        creates: /var/lib/jupyterhub/anaconda
       become: yes
       ansible_become_method: sudo
       become_user: jupyterhub
-      ignore_errors: yes
 
-    - name: change permissions to anaconda directory
+    - name: create dir .conda
       file:
-        path: /var/lib/jupyterhub/anaconda
+        path: /var/lib/jupyterhub/.conda/pkgs
+        state: directory
         owner: jupyterhub
         group: jupyterhub
-        mode: "u=rwx,g=rwx"
+
+    - name: create some files
+      file:
+        path: "{{ item }}"
+        state: touch
+        owner: jupyterhub
+        group: jupyterhub
+      with_items:
+        - /var/lib/jupyterhub/.conda/pkgs/urls.txt
+        - /var/lib/jupyterhub/.conda/environments.txt
+
+    - name: change permissions to jupyterhub directory
+      file:
+        path: /var/lib/jupyterhub
+        state: directory
+        owner: jupyterhub
+        group: jupyterhub
         recurse: yes
 
     - name: update conda
@@ -48,56 +71,46 @@
       ansible_become_method: sudo
       become_user: jupyterhub
 
-    - name: install jupyterhub
-      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge jupyterhub
+    - name: install nodejs, notebook, jupyterlab
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y \
+        nodejs \
+        notebook \
+        ipython \
+        jupyter \
+        jupyterlab \
+        flake8
       become: yes
       ansible_become_method: sudo
       become_user: jupyterhub
 
-    - name: install notebook
-      command: /var/lib/jupyterhub/anaconda/bin/conda install -y notebook
+    - name: install jupyterhub, sudospawner, widgetnbextension, ipympl
+      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge \
+        jupyterhub \
+        sudospawner \
+        widgetsnbextension \
+        ipympl
       become: yes
       ansible_become_method: sudo
       become_user: jupyterhub
 
-    - name: install jupyterlab
-      command: /var/lib/jupyterhub/anaconda/bin/conda install -y jupyterlab
+    - name: "install jupytelab extension: @jupyter/hub-extension"
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install "{{ item }}"
       become: yes
       ansible_become_method: sudo
       become_user: jupyterhub
+      with_items:
+        - "@jupyterlab/hub-extension"
+        - "@jupyter-widgets/jupyterlab-manager"
+        - "jupyter-matplotlib"
+        - "jupyterlab-spreadsheet"
+        - "@ijmbarr/jupyterlab_spellchecker"
+        - "jupyterlab-flake8"
+        - "jupyterlab_tensorboard"
+        - "@jupyterlab/plotly-extension"
+        - "@jupyterlab/toc"
 
-    - name: install sudospawner
-      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge sudospawner
-      become: yes
-      ansible_become_method: sudo
-      become_user: jupyterhub
-
-    - name: install @jupyterlab/hub-extension
-      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install @jupyterlab/hub-extension
-      become: yes
-      ansible_become_method: sudo
-      become_user: jupyterhub
-
-    - name: install ipyml
-      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge ipympl
-      become: yes
-      ansible_become_method: sudo
-      become_user: jupyterhub
-
-    - name: install widgetsnbextension
-      command: /var/lib/jupyterhub/anaconda/bin/conda install -y -c conda-forge widgetsnbextension
-      become: yes
-      ansible_become_method: sudo
-      become_user: jupyterhub
-
-    - name: install @jupyter-widgets/jupyterlab-manager
-      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install @jupyter-widgets/jupyterlab-manager
-      become: yes
-      ansible_become_method: sudo
-      become_user: jupyterhub
-
-    - name: install jupyter-matplotlib
-      command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install jupyter-matplotlib
+    - name: update conda to remove problems with versions
+      command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
       become: yes
       ansible_become_method: sudo
       become_user: jupyterhub
@@ -116,12 +129,6 @@
       user:
          name: jupyterhub
          groups: shadow,users
-         append: yes
-
-    - name: add user peregrinus to jupyterhub
-      user:
-         name: peregrinus
-         groups: jupyterhub
          append: yes
 
     - name: change shadow file
