@@ -3,41 +3,6 @@
   hosts: "{{ vhost | default('localhost') }}"
   become: yes
   become_user: root
-  vars:
-    packages:
-      - autofs
-      - sshfs
-      - openssh-server
-      - openssh-client
-      - vim-gtk3
-      - zsh
-      - tmux
-      - syslog-ng
-      - synergy
-      - git
-      - python3-pip
-      - python-pip
-      - bridge-utils
-      - ansible
-      - docker
-      - lxc
-      - lxd
-      - ifenslave
-      - virt-manager
-      - npm
-      - openssl
-      - openntpd
-      - wget
-      - curl
-      - virtualenv
-      - docker.io
-      - exuberant-ctags
-      - awesome
-      - sakura
-      - uget
-      - mate-desktop-environment
-      - pluma
-      - nodejs
 
   tasks:
 
@@ -56,9 +21,43 @@
         upgrade: dist
 
     - name: install {{ item }}
-      apt: name={{ item }} state=present
-      with_items: '{{packages}}'
-      ignore_errors: yes
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - autofs
+        - sshfs
+        - openssh-server
+        - openssh-client
+        - vim-gtk3
+        - zsh
+        - tmux
+        - syslog-ng
+        - synergy
+        - git
+        - python3-pip
+        - python-pip
+        - bridge-utils
+        - ansible
+        - docker
+        - lxc
+        - lxd
+        - ifenslave
+        - virt-manager
+        - npm
+        - openssl
+        - openntpd
+        - wget
+        - curl
+        - virtualenv
+        - docker.io
+        - exuberant-ctags
+        - awesome
+        - sakura
+        - uget
+        - mate-desktop-environment
+        - pluma
+        - nodejs
 
     - name: set default shell to zsh
       user:
@@ -177,7 +176,11 @@
         force: yes
       ansible_become_method: sudo
       become_user: peregrinus
-      ignore_errors: yes
+
+    - name: install p_dotfiles
+      command: $HOME/p_dotfiles/.install -f -v
+      ansible_become_method: sudo
+      become_user: peregrinus
 
         #    - name: install openntpd
         #      apt:
