@@ -156,7 +156,13 @@
     - name: add user peregrinus to dialout
       user:
         name: peregrinus
-        group: dialout
+        groups: dialout, users
+        append: yes
+
+    - name: set primary group to peregrinus
+      user:
+        name: peregrinus
+        group: peregrinus
         append: yes
 
     - name: clone p_dotfiles
@@ -169,23 +175,3 @@
         force: yes
       ansible_become_method: sudo
       become_user: peregrinus
-
-    - name: install p_dotfiles
-      command: $HOME/p_dotfiles/.install -f -v
-      ansible_become_method: sudo
-      become_user: peregrinus
-
-        #    - name: install openntpd
-        #      apt:
-        #        name: openntpd
-        #        state: present
-        #
-        #    - name: enable service openntpd
-        #      systemd:
-        #        name: ntpd
-        #        enabled: yes
-        #
-        #    - name: start service openntpd
-        #      systemd:
-        #        name: ntpd
-        #        state: started
