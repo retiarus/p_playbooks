@@ -177,3 +177,14 @@
         owner: jupyterhub
         group: jupyterhub
         state: touch
+
+    - name: copy env file
+      copy:
+        src: ./files/dscience_env.yml
+        dest: /var/lib/jupyterhub/dscience_env.yml
+        owner: jupyterhub
+        group: jupyterhub
+
+
+
+
