@@ -170,3 +170,10 @@
         state: directory
         mode: "u=rwx,g=rwx"
         recurse: yes
+
+    - name: create log file
+      file:
+        path: /var/log/jupyterhub.log
+        owner: jupyterhub
+        group: jupyterhub
+        state: touch
