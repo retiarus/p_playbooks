@@ -4,7 +4,7 @@ Description=JupyterHub
 [Service]
 Type=simple
 PIDFile=/run/jupyter.pid
-ExecStart=/bin/bash -c 'PATH=/var/lib/jupyterhub/anaconda/bin:$PATH exec /var/lib/jupyterhub/anaconda/bin/jupyterhub --log-level=DEBUG --config=/var/lib/jupyterhub/jupyterhub_config.py --JupyterHub.spawner_class=sudospawner.SudoSpawner'
+ExecStart=/bin/bash -c 'PATH=/var/lib/jupyterhub/anaconda/bin:$PATH exec /var/lib/jupyterhub/anaconda/bin/jupyterhub --log-level=DEBUG --config=/var/lib/jupyterhub/jupyterhub_config.py --JupyterHub.spawner_class=sudospawner.SudoSpawner 2> /var/log/jupyterhub.log'
 User=jupyterhub
 Group=jupyterhub
 WorkingDirectory=/var/lib/jupyterhub/
