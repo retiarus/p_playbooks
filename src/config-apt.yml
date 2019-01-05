@@ -3,23 +3,15 @@
   hosts: "{{ vhost | default('localhost') }}"
   become: yes
   become_user: root
+  vars:
+    avahi:
+      - avahi-daemon
+      - avahi-discover
+      - avahi-utils
+      - libnss-mdns
+      - mdns-scan
 
   tasks:
-
-    - name: install aptitude
-      apt:
-        name: aptitude
-        state: present
-
-    - name: Upgrade all packges to the last version
-      apt:
-        name: "*"
-        state: latest
-
-    - name: Upgrade all packges
-      apt:
-        upgrade: dist
-
     - name: install basic packages
       apt:
         name: "{{ item }}"
@@ -175,3 +167,12 @@
         force: yes
       ansible_become_method: sudo
       become_user: peregrinus
+
+      # - name: change permissions to peregrinus
+      # - file:
+      # -   path: "/home/peregrinus"
+      # -   owner: peregrinus
+      # -   group: peregrinus
+      # -   state: directory
+      # -   mode: "u=rwX,g=rX"
+      # -   recurse: yes
