@@ -10,46 +10,50 @@
       - avahi-utils
       - libnss-mdns
       - mdns-scan
+    terminal:
+      - openssh-server
+      - openssh-client
+      - vim-gtk3
+      - zsh
+      - tmux
+      - ansible
+      - git
+      - exuberant-ctags
+      - wget
+      - curl
+      - python3-pip
+      - python-pip
+      - virtualenv
+      - openssl
+    server:
+      - docker
+      - docker.io
+      - lxc
+      - lxd
+      - ifenslave
+      - virt-manager
+      - bridge-utils
+    desktop:
+      - awesome
+      - sakura
+      - uget
+      - mate-desktop-environment
+      - pluma
+      - synergy
+    basic:
+      - syslog-ng
+      - openntpd
+      - autofs
+      - sshfs
+    nodejs:
+      - npm
+      - nodejs
 
   tasks:
     - name: install basic packages
       apt:
         name: "{{ item }}"
         state: present
-      with_items:
-        - autofs
-        - sshfs
-        - openssh-server
-        - openssh-client
-        - vim-gtk3
-        - zsh
-        - tmux
-        - syslog-ng
-        - synergy
-        - git
-        - python3-pip
-        - python-pip
-        - bridge-utils
-        - ansible
-        - docker
-        - lxc
-        - lxd
-        - ifenslave
-        - virt-manager
-        - npm
-        - openssl
-        - openntpd
-        - wget
-        - curl
-        - virtualenv
-        - docker.io
-        - exuberant-ctags
-        - awesome
-        - sakura
-        - uget
-        - mate-desktop-environment
-        - pluma
-        - nodejs
 
     - name: set default shell to zsh
       user:
