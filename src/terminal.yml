@@ -26,7 +26,6 @@
     - pipenv
     - virtualenvwrapper
   become: yes
-  ansible_become_method: sudo
   become_user: peregrinus
   ignore_errors: yes
 
@@ -50,6 +49,5 @@
     update: yes
     recursive: yes
     force: yes
-  ansible_become_method: sudo
   become_user: peregrinus
 ...
