@@ -1,0 +1,55 @@
+---
+- name: install terminal packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ terminal_p }}"
+
+- name: set default shell to zsh
+  user:
+    name: peregrinus
+    shell: /bin/zsh
+
+- name: Create a 4096-bit SSH key for user peregrinus
+  user:
+    name: peregrinus
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+
+- name: install pipenv, virtualenvwrapper
+  pip:
+    name: pipenv
+    executable: pip3
+    extra_args: --user
+  with_items:
+    - pipenv
+    - virtualenvwrapper
+  become: yes
+  ansible_become_method: sudo
+  become_user: peregrinus
+  ignore_errors: yes
+
+- name: add user peregrinus to dialout
+  user:
+    name: peregrinus
+    groups: dialout, users
+    append: yes
+
+- name: set primary group to peregrinus
+  user:
+    name: peregrinus
+    group: peregrinus
+    append: yes
+
+- name: clone p_dotfiles
+  git:
+    repo: 'https://github.com/retiarus/p_dotfiles'
+    dest: "{{ user_dotfiles | default('/home/peregrinus/p_dotfiles') }}"
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  ansible_become_method: sudo
+  become_user: peregrinus
+...

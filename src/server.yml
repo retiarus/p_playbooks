@@ -1,0 +1,38 @@
+---
+- name: install server packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ server_p }}"
+
+- name: stop and disabled service lxc
+  systemd:
+    name: lxc
+    enabled: no
+    state: stopped
+
+- name: stop and disabled service lxd
+  systemd:
+    name: lxd
+    enabled: no
+    state: stopped
+
+- name: stop and disabled service lxc-net
+  systemd:
+    name: lxc-net
+    enabled: no
+    state: stopped
+
+- name: stop and disabled service lxcfs
+  systemd:
+    name: lxcfs
+    enabled: no
+    state: stopped
+
+- name: config network to libvirt
+  copy:
+    src: ./files/default.xml
+    dest: /etc/libvirt/qemu/networks/default.xml
+    owner: root
+    group: root
+...

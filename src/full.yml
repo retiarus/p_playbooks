@@ -1,0 +1,8 @@
+---
+- include_tasks: basic.yml
+- include_tasks: terminal.yml
+- include_tasks: avahi.yml
+- include_tasks: server.yml
+- include_tasks: desktop.yml
+- include_tasks: nodejs.yml
+...

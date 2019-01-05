@@ -1,0 +1,74 @@
+---
+- name: Install basic aplications
+  hosts: "{{ vhost | default('localhost') }}"
+  become: yes
+  become_user: root
+  vars:
+    basic_p:
+      - syslog-ng
+      - openntpd
+      - autofs
+      - sshfs
+    terminal_p:
+      - openssh-server
+      - openssh-client
+      - vim-gtk3
+      - zsh
+      - tmux
+      - ansible
+      - git
+      - exuberant-ctags
+      - wget
+      - curl
+      - python3-pip
+      - python-pip
+      - virtualenv
+      - openssl
+    avahi_p:
+      - avahi-daemon
+      - avahi-discover
+      - avahi-utils
+      - libnss-mdns
+      - mdns-scan
+    server_p:
+      - docker
+      - docker.io
+      - lxc
+      - lxd
+      - ifenslave
+      - virt-manager
+      - bridge-utils
+    desktop_p:
+      - awesome
+      - sakura
+      - uget
+      - mate-desktop-environment
+      - pluma
+      - synergy
+    nodejs_p:
+      - npm
+      - nodejs
+    target: "terminal"
+
+  tasks:
+    - include_tasks: basic.yml
+      when: target == "basic"
+
+    - include_tasks: terminal.yml
+      when: target == "terminal"
+
+    - include_tasks: avahi.yml
+      when: target == "avahi"
+
+    - include_tasks: server.yml
+      when: target == "server"
+
+    - include_tasks: desktop.yml
+      when: target == "desktop"
+
+    - include_tasks: nodejs.yml
+      when: target == "nodejs"
+
+    - include_tasks: full.yml
+      when: target == "full"
+...

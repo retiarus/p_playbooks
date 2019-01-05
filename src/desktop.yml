@@ -1,0 +1,19 @@
+---
+- name: install desktop packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ desktop_p }}"
+
+- name: crete dir's to home in mnt
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: peregrinus
+    group: users
+  with_items:
+      - '/mnt/falco02/home'
+      - '/mnt/falco03/home'
+      - '/mnt/falco06/home'
+  ignore_errors: yes
+...

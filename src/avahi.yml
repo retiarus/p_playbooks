@@ -1,0 +1,13 @@
+---
+- name: install avahi packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ avahi_p }}"
+
+- name: start and enabled avahi-daemon
+  systemd:
+    name: avahi-daemon
+    enabled: yes
+    state: started
+...

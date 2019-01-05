@@ -1,0 +1,33 @@
+---
+- name: install basic packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ basic_p }}"
+
+- name: enable service syslog-ng
+  systemd:
+    name: syslog-ng
+    enabled: yes
+
+- name: start service syslog-ng
+  systemd:
+    name: syslog-ng
+    state: started
+
+- name: copy auto.sshfs
+  copy:
+    src: ./files/auto.sshfs
+    dest: /etc/auto.sshfs
+
+- name: copy auto.master
+  copy:
+    src: ./files/auto.master
+    dest: /etc/auto.master
+
+- name: enable and start service autofs
+  systemd:
+    name: autofs
+    enabled: yes
+    state: started
+...
