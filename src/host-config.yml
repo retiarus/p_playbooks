@@ -34,6 +34,7 @@
       - docker
       - docker.io
       - lxc
+      - lxc-dev
       - lxd
       - ifenslave
       - virt-manager
