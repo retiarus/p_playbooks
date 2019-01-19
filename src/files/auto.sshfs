@@ -4,6 +4,12 @@
 
 /mnt/falco06/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,auto_cache,kernel_cache,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@falco06\:/home/peregrinus
 
+/mnt/ubuntu-server-01/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,auto_cache,kernel_cache,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@ubuntu-server-01\:/home/peregrinus
+
+/mnt/ubuntu-server-02/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,auto_cache,kernel_cache,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@ubuntu-server-02\:/home/peregrinus
+
+/mnt/ubuntu-server-03/home -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,auto_cache,kernel_cache,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@ubuntu-server-03\:/home/peregrinus
+
 /mnt/Downloads -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,auto_cache,kernel_cache,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@192.168.5.250\:/server/var/lib/deluge/Downloads
 
 /mnt/Arquivos-midias -fstype=fuse,rw,allow_other,nodev,nonempty,noatime,auto_cache,kernel_cache,IdentityFile=/home/peregrinus/.ssh/id_rsa :sshfs\#peregrinus@192.168.5.250\:/server/Arquivos-midias
