@@ -16,6 +16,9 @@
         group: jupyterhub
         shell: /bin/false
         home: /var/lib/jupyterhub
+        generate_ssh_key: yes
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa
 
     - name: add user peregrinus to jupyterhub
       user:
@@ -185,6 +188,8 @@
         owner: jupyterhub
         group: jupyterhub
 
-
-
-
+    - name: create env dscience
+      command: /var/lib/jupyterhub/anaconda/bin/conda env create -f /var/lib/jupyterhub/dscience_env.yml
+      become: yes
+      ansible_become_method: sudo
+      become_user: jupyterhub
