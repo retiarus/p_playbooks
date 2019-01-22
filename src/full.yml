@@ -5,4 +5,5 @@
 - include_tasks: server.yml
 - include_tasks: desktop.yml
 - include_tasks: nodejs.yml
+- include_tasks: virt.yml
 ...
