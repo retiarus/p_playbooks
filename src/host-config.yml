@@ -37,7 +37,6 @@
       - lxc-dev
       - lxd
       - ifenslave
-      - virt-manager
       - bridge-utils
     desktop_p:
       - awesome
@@ -46,10 +45,24 @@
       - mate-desktop-environment
       - pluma
       - synergy
+      - spice-client-gtk
+      - remmina-plugin-spice
+      - remmina-plugin-exec
+      - remmina-plugin-telepathy
+      - remmina-plugin-xdmcp
+      - remmina-plugin-nx
+      - virt-manager
     nodejs_p:
       - npm
       - nodejs
+    virt:
+      - openvswitch-switch
+      - openvswitch-common
+      - libvirt-daemon
+      - libvirglrenderer-dev
+      - libvirglrenderer0
     target: "terminal"
+
 
   tasks:
     - include_tasks: basic.yml
