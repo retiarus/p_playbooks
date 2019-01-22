@@ -4,6 +4,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ terminal_p }}"
+  ignore_errors: True
 
 - name: set default shell to zsh
   user:
