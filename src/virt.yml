@@ -4,4 +4,12 @@
     name: "{{ item }}"
     state: present
   loop: "{{ virt_p }}"
+
+- name: config network to libvirt
+  copy:
+    src: ./files/default.xml
+    dest: /etc/libvirt/qemu/networks/default.xml
+    owner: root
+    group: root
+
 ...
