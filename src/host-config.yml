@@ -63,6 +63,7 @@
       - vlc
       - gimp
       - inkscape
+      - chromium-browser
     nodejs_p:
       - npm
       - nodejs
