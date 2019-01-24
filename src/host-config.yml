@@ -38,7 +38,6 @@
       - lxd
       - ifenslave
       - bridge-utils
-      - libvirtd
     desktop_p:
       - awesome
       - sakura
@@ -56,10 +55,11 @@
     nodejs_p:
       - npm
       - nodejs
-    virt:
+    virt_p:
       - openvswitch-switch
       - openvswitch-common
       - libvirt-daemon
+      - libvirt-bin
       - libvirglrenderer-dev
       - libvirglrenderer0
     target: "terminal"
