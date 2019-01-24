@@ -24,6 +24,9 @@
       - python-pip
       - virtualenv
       - openssl
+      - pulseaudio-module-zeroconf
+      - pulsemixer
+      - pamix
     avahi_p:
       - avahi-daemon
       - avahi-discover
