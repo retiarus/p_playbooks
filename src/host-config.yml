@@ -56,6 +56,13 @@
       - remmina-plugin-nx
       - virt-manager
       - pavucontrol
+      - smplayer
+      - mpv
+      - mplayer
+      - mplayer-gui
+      - vlc
+      - gimp
+      - inkscape
     nodejs_p:
       - npm
       - nodejs
