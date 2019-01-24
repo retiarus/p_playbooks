@@ -52,6 +52,7 @@
       - remmina-plugin-xdmcp
       - remmina-plugin-nx
       - virt-manager
+      - pavucontrol
     nodejs_p:
       - npm
       - nodejs
