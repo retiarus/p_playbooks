@@ -24,6 +24,9 @@
       - python-pip
       - virtualenv
       - openssl
+      - pulseaudio-module-zeroconf
+      - pulsemixer
+      - pamix
     avahi_p:
       - avahi-daemon
       - avahi-discover
@@ -38,7 +41,6 @@
       - lxd
       - ifenslave
       - bridge-utils
-      - libvirtd
     desktop_p:
       - awesome
       - sakura
@@ -53,13 +55,23 @@
       - remmina-plugin-xdmcp
       - remmina-plugin-nx
       - virt-manager
+      - pavucontrol
+      - smplayer
+      - mpv
+      - mplayer
+      - mplayer-gui
+      - vlc
+      - gimp
+      - inkscape
+      - chromium-browser
     nodejs_p:
       - npm
       - nodejs
-    virt:
+    virt_p:
       - openvswitch-switch
       - openvswitch-common
       - libvirt-daemon
+      - libvirt-bin
       - libvirglrenderer-dev
       - libvirglrenderer0
     target: "terminal"

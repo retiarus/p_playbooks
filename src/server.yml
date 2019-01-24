@@ -28,11 +28,4 @@
     name: lxcfs
     enabled: no
     state: stopped
-
-- name: config network to libvirt
-  copy:
-    src: ./files/default.xml
-    dest: /etc/libvirt/qemu/networks/default.xml
-    owner: root
-    group: root
 ...
