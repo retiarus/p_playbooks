@@ -20,6 +20,29 @@
         ssh_key_bits: 4096
         ssh_key_file: .ssh/id_rsa
 
+    - name: create empty file authorized_keys for jupyterhub
+      file:
+        path: "/var/lib/anaconda/jupyterhub/.ssh/authorized_keys"
+        owner: jupyterhub
+        group: jupyterhub
+        state: touch
+
+    - name: define variable pubkey for jupyterhub
+      command: cat /var/lib/jupyterhub/.ssh/id_rsa.pub
+      register: id_rsa
+      when: ansible_hostname == "ubuntu-server-02"
+      notify: define pubkey
+      become: yes
+      become_user: jupyterhub
+
+    - name: add pubkey for jupyterhub
+      lineinfile:
+        path: "/var/lib/jupyterhub/anaconda/.ssh/authorized_keys"
+        line: "{{ hostvars['ubuntu-server-02']['id_rsa']['stdout'] }}"
+        #      when: ansible_hostname != "ubuntu-server-02"
+      become: yes
+      become_user: jupyterhub
+
     - name: add user peregrinus to jupyterhub
       user:
          name: peregrinus
@@ -165,9 +188,9 @@
         owner: root
         group: root
 
-    - name: change user to /var/lib/jupyterhub
+    - name: change user to /var/lib/jupyterhub/anaconda
       file:
-        path: "/var/lib/jupyterhub"
+        path: "/var/lib/jupyterhub/anaconda"
         owner: jupyterhub
         group: jupyterhub
         state: directory
