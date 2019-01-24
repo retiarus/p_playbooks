@@ -38,6 +38,7 @@
       - lxd
       - ifenslave
       - bridge-utils
+      - libvirtd
     desktop_p:
       - awesome
       - sakura
