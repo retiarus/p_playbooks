@@ -1,0 +1,117 @@
+---
+- name: install and config mosquitto
+  hosts: "{{ vhost | default('localhost') }}"
+  become: yes
+
+  tasks:
+    - name: create group mosquitto
+      group:
+        name: mosquitto
+        state: present
+
+    - name: create user mosquitto
+      user:
+        name: mosquitto
+        group: mosquitto
+        shell: /bin/false
+        home: /var/lib/mosquitto
+
+    - name: upgrade all packges to the last version
+      apt:
+        name: "*"
+        state: latest
+
+    - name: upgrade all packges
+      apt:
+        upgrade: dist
+
+    - name: install mosquitto
+      apt:
+        name: mosquitto
+        state: present
+
+    - name: create /etc/mosquitto
+      file:
+        path: /etc/mosquitto
+        state: directory
+        owner: mosquitto
+        group: mosquitto
+
+    - name: create /etc/mosquitto/certs
+      file:
+        path: /etc/mosquitto/certs
+        state: directory
+        owner: mosquitto
+        group: mosquitto
+
+    - name: create /etc/mosquitto/conf.d
+      file:
+        path: /etc/mosquitto/conf.d
+        state: directory
+        owner: mosquitto
+        group: mosquitto
+
+    - name: create /var/log/mosquitto
+      file:
+        path: /var/log/mosquitto
+        state: directory
+        owner: mosquitto
+        group: mosquitto
+
+    - name: copy mosquitto.conf to /etc/mosquitto/conf.d
+      copy:
+        src: ./files/mosquitto.conf
+        dest: /etc/mosquitto/conf.d/mosquitto.conf
+
+    - name: copy mosquitto.pri.conf to /etc/mosquitto
+      copy:
+        src: ./files/mosquitto.pri.conf
+        dest: /etc/mosquitto/mosquitto.conf
+
+    - name: copy jp.pw to /etc/mosquitto
+      copy:
+        src: ./files/jp.pw
+        dest: /etc/mosquitto/jp.pw
+
+    - name: generate CA key pair
+      openssl_privatekey:
+        path: "/etc/mosquitto/certs/mqtt_ca.key"
+        passphrase: ansible
+        cipher: aes256
+        size: 2056
+
+    - name: create a certificate request
+      openssl_csr:
+        path: "/etc/mosquitto/certs/mqtt_ca.csr"
+        privatekey_path: "/etc/mosquitto/certs/mqtt_ca.key"
+        privatekey_passphrase: ansible
+        common_name: pi-router
+
+    - name: Generate a Self Signed OpenSSL certificate
+      openssl_certificate:
+        path: "/etc/mosquitto/certs/mqtt_ca.crt"
+        privatekey_path: "/etc/mosquitto/certs/mqtt_ca.key"
+        csr_path: "/etc/mosquitto/certs/mqtt_ca.csr"
+        provider: selfsigned
+
+    - name: generate mosquitto broker key pair
+      openssl_privatekey:
+        path: "/etc/mosquitto/certs/mqtt_srv.key"
+        passphrase: ansible
+        cipher: aes256
+        size: 2056
+
+    - name: create a certificate request from ca
+      openssl_csr:
+        path: "/etc/mosquitto/certs/mqtt_srv.csr"
+        privatekey_path: "/etc/mosquitto/certs/mqtt_srv.key"
+        privatekey_passphrase: ansible
+        common_name: pi-router
+
+    - name: change user to /etc/mosquitto
+      file:
+        path: /etc/mosquitto
+        owner: mosquitto
+        group: mosquitto
+        state: directory
+        recurse: yes
