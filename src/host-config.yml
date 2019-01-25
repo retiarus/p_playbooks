@@ -64,6 +64,7 @@
       - gimp
       - inkscape
       - chromium-browser
+      - deluge
     nodejs_p:
       - npm
       - nodejs
