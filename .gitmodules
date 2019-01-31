@@ -1,0 +1,3 @@
+[submodule "vendor/virtualenv"]
+	path = vendor/virtualenv
+	url = https://github.com/pypa/virtualenv

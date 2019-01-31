@@ -2,7 +2,10 @@
 - name: config conda
   hosts: "{{ vhost | default('localhost') }}"
   become: yes
+  become_method: sudo
   become_user: root
+  vars:
+    user: peregrinus
 
   tasks:
     - name: create group jupyterhub
@@ -22,30 +25,30 @@
 
     - name: create empty file authorized_keys for jupyterhub
       file:
-        path: "/var/lib/anaconda/jupyterhub/.ssh/authorized_keys"
+        path: "/var/lib/jupyterhub/.ssh/authorized_keys"
         owner: jupyterhub
         group: jupyterhub
         state: touch
 
-    - name: define variable pubkey for jupyterhub
-      command: cat /var/lib/jupyterhub/.ssh/id_rsa.pub
-      register: id_rsa
-      when: ansible_hostname == "ubuntu-server-02"
-      notify: define pubkey
-      become: yes
-      become_user: jupyterhub
-
-    - name: add pubkey for jupyterhub
-      lineinfile:
-        path: "/var/lib/jupyterhub/anaconda/.ssh/authorized_keys"
-        line: "{{ hostvars['ubuntu-server-02']['id_rsa']['stdout'] }}"
-        #      when: ansible_hostname != "ubuntu-server-02"
-      become: yes
-      become_user: jupyterhub
+        #    - name: define variable pubkey for jupyterhub
+        #      command: cat /var/lib/jupyterhub/.ssh/id_rsa.pub
+        #      register: id_rsa
+        #      when: ansible_hostname == "ubuntu-server-02"
+        #      notify: define pubkey
+        #      become: yes
+        #      become_user: jupyterhub
+        #
+        #    - name: add pubkey for jupyterhub
+        #      lineinfile:
+        #        path: "/var/lib/jupyterhub/anaconda/.ssh/authorized_keys"
+        #        line: "{{ hostvars['ubuntu-server-02']['id_rsa']['stdout'] }}"
+        #        #      when: ansible_hostname != "ubuntu-server-02"
+        #      become: yes
+        #      become_user: jupyterhub
 
     - name: add user peregrinus to jupyterhub
       user:
-         name: peregrinus
+         name: "{{ user }}"
          groups: jupyterhub
          append: yes
 
@@ -55,7 +58,6 @@
         dest: /tmp/anaconda3.sh
         mode: "u=rwx,g=rwx,o=rx"
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
 
     - name: install anaconda
@@ -63,7 +65,6 @@
       args:
         creates: /var/lib/jupyterhub/anaconda
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
 
     - name: create dir .conda
@@ -94,7 +95,6 @@
     - name: update conda
       command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
 
     - name: install nodejs, notebook, jupyterlab
@@ -106,7 +106,6 @@
         jupyterlab \
         flake8
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
 
     - name: install jupyterhub, sudospawner, widgetnbextension, ipympl
@@ -116,13 +115,11 @@
         widgetsnbextension \
         ipympl
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
 
     - name: "install jupytelab extension: @jupyter/hub-extension"
       command: /var/lib/jupyterhub/anaconda/bin/jupyter labextension install "{{ item }}"
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
       with_items:
         - "@jupyterlab/hub-extension"
@@ -138,7 +135,6 @@
     - name: update conda to remove problems with versions
       command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
 
     - name: update sudoers
@@ -214,5 +210,4 @@
     - name: create env dscience
       command: /var/lib/jupyterhub/anaconda/bin/conda env create -f /var/lib/jupyterhub/dscience_env.yml
       become: yes
-      ansible_become_method: sudo
       become_user: jupyterhub
