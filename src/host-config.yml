@@ -29,6 +29,7 @@
       - pamix
       - cifs-utils
       - smbclient
+      - nftables
     avahi_p:
       - avahi-daemon
       - avahi-discover
