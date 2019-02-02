@@ -30,6 +30,7 @@
       - cifs-utils
       - smbclient
       - nftables
+      - acl
     avahi_p:
       - avahi-daemon
       - avahi-discover
