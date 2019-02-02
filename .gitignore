@@ -3,3 +3,4 @@
 *.swn
 *.swo
 *.retry
+py_ansible/*
