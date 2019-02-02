@@ -4,3 +4,6 @@
 [submodule "vendor/ansible"]
 	path = vendor/ansible
 	url = https://github.com/ansible/ansible
+[submodule "src/ansible-openwrt"]
+	path = src/ansible-openwrt
+	url = https://github.com/gekmihesg/ansible-openwrt
