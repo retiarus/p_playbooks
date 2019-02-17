@@ -51,4 +51,18 @@
     recursive: yes
     force: yes
   become_user: peregrinus
+
+- name: add hosts to host file
+  lineinfile:
+    path: "/etc/host"
+    line: "{{ item }}"
+  loop:
+    - "192.168.5.11  ubuntu-server-01 ubuntu-server-01.falco.net"
+    - "192.168.5.12  ubuntu-server-02 ubuntu-server-02.falco.net"
+    - "192.169.5.13  ubuntu-server-03 ubuntu-server-03.falco.net"
+    - "192.168.5.3   falco03          falco03.falco.net"
+    - "192.168.5.254 openwrt          openwrt.falco.net"
+    - "192.168.5.1   pfsense          pfsense.falco.net"
+    - "192.168.5.250 pi-router        pi-router.falco.net"
+    - "192.168.5.253 blacknas         blacknas.falco.net"
 ...
