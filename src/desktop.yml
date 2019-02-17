@@ -26,4 +26,21 @@
       - '/mnt/downloads-flexget'
       - '/mnt/mpiuser'
   ignore_errors: yes
+
+ - name: add mount points to /etc/fstab
+   lineinfile:
+     path: "/etc/fstab"
+     line: "{{ item }}"
+   loop:
+     - "blacknas.falco.net:shares/downloads-flexget /mnt/dowloads-flexget nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/iso               /mnt/iso              nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/animes            /mnt/animes           nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/filmes            /mnt/filmes           nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/imagens           /mnt/imagens          nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/falco02           /mnt/falco02          nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/arquivos          /mnt/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/organizar         /mnt/organizar        nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/downloads         /mnt/downloads        nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/experimentos      /mnt/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
+     - "blacknas.falco.net:shares/mpiuser           /mnt/mpiuser          nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=tcp 0 0"
 ...
