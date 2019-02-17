@@ -12,8 +12,18 @@
     owner: peregrinus
     group: users
   with_items:
-      - '/mnt/falco02/home'
-      - '/mnt/falco03/home'
-      - '/mnt/falco06/home'
+      - '/mnt/falco02'
+      - '/mnt/falco03'
+      - '/mnt/falco06'
+      - '/mnt/iso'
+      - '/mnt/animes'
+      - '/mnt/filmes'
+      - '/mnt/imagens'
+      - '/mnt/arquivos'
+      - '/mnt/organizar'
+      - '/mnt/downloads'
+      - '/mnt/experimentos'
+      - '/mnt/downloads-flexget'
+      - '/mnt/mpiuser'
   ignore_errors: yes
 ...
