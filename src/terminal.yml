@@ -54,7 +54,7 @@
 
 - name: add hosts to host file
   lineinfile:
-    path: "/etc/host"
+    path: "/etc/hosts"
     line: "{{ item }}"
   loop:
     - "192.168.5.11  ubuntu-server-01 ubuntu-server-01.falco.net"
