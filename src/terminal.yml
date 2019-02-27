@@ -50,14 +50,14 @@
     update: yes
     recursive: yes
     force: yes
-  become_user: peregrinus
+  become_user: "{{ user }}"
 
 - name: crete dir's to home in mnt
   file:
     path: "{{ item }}"
     state: directory
-    owner: peregrinus
-    group: users
+    owner: "{{ user }}"
+    group: "{{ user }}"
   with_items:
     - '/mnt/falco02'
     - '/mnt/falco03'
@@ -80,6 +80,8 @@
     - '/mnt/sdf'
     - '/mnt/sdg'
     - '/mnt/sdh'
+    - '/mnt/ubuntu-server-02:raid_falco'
+    - '/mnt/home_falco'
   ignore_errors: yes
 
 - name: add hosts to host file
@@ -96,20 +98,14 @@
     - "192.168.5.250 pi-router        pi-router.falco.net"
     - "192.168.5.253 blacknas         blacknas.falco.net"
 
--  name: add mount points to /etc/fstab
+- name: add mount points to /etc/fstab
   lineinfile:
     path: "/etc/fstab"
     line: "{{ item }}"
   loop:
-    - "blacknas.falco.net:shares/downloads-flexget /mnt/dowloads-flexget nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/iso               /mnt/iso              nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/animes            /mnt/animes           nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/filmes            /mnt/filmes           nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/imagens           /mnt/imagens          nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/falco02           /mnt/falco02          nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/arquivos          /mnt/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/organizar         /mnt/organizar        nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/downloads         /mnt/downloads        nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/experimentos      /mnt/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
-    - "blacknas.falco.net:shares/mpiuser           /mnt/mpiuser          nfs noatime,noacl,nocto,wsize=32768,rsize=32768,proto=udp 0 0"
+    - "blacknas.falco.net:shares/downloads-flexget /mnt/dowloads-flexget nfs noatime,v3,wsize=32768,rsize=32768,proto=udp 0 0"
+    - "blacknas.falco.net:shares/animes            /mnt/animes           nfs noatime,v3,wsize=32768,rsize=32768,proto=udp 0 0"
+    - "blacknas.falco.net:shares/filmes            /mnt/filmes           nfs noatime,v3,wsize=32768,rsize=32768,proto=udp 0 0"
+    - "blacknas.falco.net:shares/imagens           /mnt/imagens          nfs noatime,v3,wsize=32768,rsize=32768,proto=udp 0 0"
+    - "blacknas.falco.net:shares/organizar         /mnt/organizar        nfs noatime,v3,wsize=32768,rsize=32768,proto=udp 0 0"
 ...
