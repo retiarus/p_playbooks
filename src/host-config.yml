@@ -32,6 +32,8 @@
       - nftables
       - acl
       - unrar
+      - nbd-client
+      - nfstrace
     avahi_p:
       - avahi-daemon
       - avahi-discover
@@ -47,6 +49,10 @@
       - ifenslave
       - bridge-utils
       - samba
+      - nfs4-acl-tools
+      - nfs-kernel-server
+      - nfs-common
+      - nbd-server
     desktop_p:
       - awesome
       - sakura
@@ -82,6 +88,8 @@
       - libvirglrenderer-dev
       - libvirglrenderer0
     target: "terminal"
+    user: "peregrinus"
+    nfs_server: "ubuntu-server-02"
 
   tasks:
     - include_tasks: basic.yml
@@ -104,6 +112,12 @@
 
     - include_tasks: virt.yml
       when: target == "virt"
+
+    - include_tasks: nfs-client.yml
+      when: target == "nfs-client"
+
+    - include_tasks: nfs-server.yml
+      when: target == "nfs-server" and ansible_hostname == nfs_server
 
     - include_tasks: full.yml
       when: target == "full"
