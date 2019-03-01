@@ -87,9 +87,9 @@
       - libvirt-bin
       - libvirglrenderer-dev
       - libvirglrenderer0
-    target: "terminal"
-    user: "peregrinus"
-    nfs_server: "ubuntu-server-02"
+    target: terminal
+    user: peregrinus
+    nfs_server: ubuntu-server-02
 
   tasks:
     - include_tasks: basic.yml
