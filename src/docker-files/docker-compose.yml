@@ -1,0 +1,30 @@
+---
+version: "2"
+services:
+  deluge:
+    image: linuxserver/deluge
+    container_name: deluge
+    network_mode: host
+    environment:
+      - PUID=2000
+      - PGID=2000
+      - UMASK_SET=022
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /var/lib/deluge/config:/config
+      - /mnt/Arquivos-midias:/downloads
+    restart: unless-stopped
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=2001
+      - PGID=2001
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /path/to/appdata/config:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
