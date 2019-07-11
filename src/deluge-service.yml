@@ -1,0 +1,41 @@
+---
+- name: config and initialize deluge service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create group deluge
+      group:
+        name: deluge
+        state: present
+        gid: 2000
+
+    - name: create user deluge
+      user:
+         name: deluge
+         group: deluge
+         shell: /bin/false
+         home: /var/lib/deluge/
+         uid: 2000
+
+    - name: create dir Arquivos-midias
+      file:
+        path: /mnt/Arquivos-midias/
+        state: directory
+        owner: deluge
+        group: users
+
+    - name: copy config files
+      copy:
+        src: "{{ item }}"
+        dest: /var/lib/deluge/
+        owner: deluge
+        group: deluge
+      with_fileglob:
+        - ./files/deluge/*
+
+    - name: generate deluge service using docker-compose
+      docker_compose:
+        project_src: ./docker-files/
+        services: deluge
+        state: present
