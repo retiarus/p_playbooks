@@ -15,16 +15,146 @@ services:
       - /mnt/Arquivos-midias:/downloads
     restart: unless-stopped
 
-  heimdall:
-    image: linuxserver/heimdall
-    container_name: heimdall
-    environment:
-      - PUID=2001
-      - PGID=2001
-      - TZ=America/Sao_Paulo
+    #  heimdall:
+    #    image: linuxserver/heimdall
+    #    container_name: heimdall
+    #    environment:
+    #      - PUID=2001
+    #      - PGID=2001
+    #      - TZ=America/Sao_Paulo
+    #    volumes:
+    #      - /path/to/appdata/config:/config
+    #    ports:
+    #      - 80:80
+    #      - 443:443
+    #    restart: unless-stopped
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    ports:
+     - "8883:8883"
+     - "1883:1883"
+    restart: always
     volumes:
-      - /path/to/appdata/config:/config
+      - /etc/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /etc/mosquitto/jp.pw:/etc/config/jp.pw:ro
+      - /var/lib/mosquitto/data:/mosquitto/data
+      - /var/lib/mosquitto/log:/mosquitto/log
+    networks:
+      - iot_grafana
+
+  influxdb:
+    image: influxdb:alpine
+    container_name: influxdb
+    restart: always
+    environment:
+     - INFLUXDB_INIT_PWD="password"
+     - PRE_CREATE_DB="iot"
+    ports:
+     - "8083:8083"
+     - "8086:8086"
+    volumes:
+     - /var/lib/influxdb/data:/var/lib/influxdb
+     - /var/lib/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    netwokrs:
+     - iot_grafana
+
+  grafana:
+    image: grafana
+    container_name: grafana
+    restart: always
+    ports:
+     - "3000:3000"
+    volumes:
+      - grafana-db:/var/lib/grafana
+      - grafana-log:/var/log/grafana
+      - grafana-conf:/etc/grafana
+    networks:
+      - iot_grafana
+
+  diskover:
+    image: linuxserver/diskover
+    container_name: diskover
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Sao_Paulo
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ES_HOST=elasticsearch
+      - ES_PORT=9200
+      - ES_USER=elastic
+      - ES_PASS=changeme
+      - RUN_ON_START=true
+      - USE_CRON=true
+    volumes:
+      - /var/lib/diskover/config:/config
+      - /var/lib/diskover/data:/data
+    ports:
+      - 80:80
+      - 9181:9181
+      - 9999:9999
+    mem_limit: 4096m
+    restart: unless-stopped
+    depends_on:
+      - elasticsearch
+      - redis
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    volumes:
+      - /var/lib/elasticsearch/data:/usr/share/elasticsearch/data
+    environment:
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  redis:
+    container_name: redis
+    image: redis:alpine
+    volumes:
+      - /var/lib/redis:/data
+
+  plex:
+    container_name: plex
+    image: linuxserver/plex
+    environment:
+      - TZ=America/Sao_Paulo
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /plex:/config
+      - /mnt/storage/movies:/movies
+      - /mnt/storage/tv:/tvshows
+    labels:
+      - "traefik.enable=true"
+      - "traefik.port=32400"
+      - "traefik.frontend.rule=Host:plex.domain.com"
+
+  traefik:
+    container_name: traefik
+    image: traefik:alpine
     ports:
       - 80:80
       - 443:443
-    restart: unless-stopped
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /traefik/traefik.toml:/etc/traefik/traefik.toml
+      - /traefik/acme.json:/acme.json
+
+volumes:
+  grafana-db:
+    driver: local
+  grafana-log:
+    driver: local
+  grafana-conf:
+    driver: local
+
+networkrs:
+  iot_grafana:
