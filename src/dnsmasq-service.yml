@@ -84,6 +84,32 @@
     loop_control:
       label: "{{ item.path }}"
 
+  - name: add mount points to fstab
+    lineinfile:
+      path: "/etc/hosts"
+      line: "{{ item }}"
+    loop:
+      - "UUID=2079856a-bb1f-46e8-b7a6-8fe32014f4c6  /tftpboot/images                  btrfs   noatime,compress=lzo,space_cache,autodefrag,subvol=images   0 1"
+      - "UUID=2079856a-bb1f-46e8-b7a6-8fe32014f4c6  /mnt/windows                      btrfs   noatime,compress=lzo,space_cache,autodefrag,subvol=windows  0 1"
+
+  - name: create links clonezilla
+    file:
+      src: /tftpboot/images/clonezilla/clonezilla-amd64/live/filesystem.squashfs
+      dest: /var/www/htdocs/clonezilla/clonezilla-amd64/filesystem.squashfs
+      state: link
+
+  - name: create links gparted-amd64
+    file:
+      src: /tftpboot/images/gparted/gparted-amd64/live/filesystem.squashfs
+      dest: /var/www/htdocs/gparted/gparted-amd64/filesystem.squashfs
+      state: link
+
+  - name: create links gparted-i686
+    file:
+      src: /tftpboot/images/gparted/gparted-i686/live/filesystem.squashfs
+      dest: /var/www/htdocs/gparted/gparted-i686/filesystem.squashfs
+      state: link
+
   - name: enable service dnsmasq
     systemd:
       name: dnsmasq
