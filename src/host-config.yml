@@ -21,12 +21,14 @@
       - wget
       - curl
       - python3-pip
+      - python3-dev
+      - python3-cffi
       - python-pip
+      - python-dev
+      - python-cffi
+      - libffi-dev
       - virtualenv
       - openssl
-      - pulseaudio-module-zeroconf
-      - pulsemixer
-      - pamix
       - cifs-utils
       - smbclient
       - nftables
@@ -34,20 +36,31 @@
       - unrar
       - nbd-client
       - nfstrace
+      - build-essential
+    pulseaudio_p:
+      - pulseaudio-module-zeroconf
+      - pulsemixer
+      - pamix
+    serial_p:
+      - screen
+      - minicom
     avahi_p:
       - avahi-daemon
       - avahi-discover
       - avahi-utils
       - libnss-mdns
       - mdns-scan
-    server_p:
+    docker_p:
       - docker
       - docker.io
+    container_lxc_p:
       - lxc
       - lxc-dev
       - lxd
+    bridges_p:
       - ifenslave
       - bridge-utils
+    server_p:
       - samba
       - nfs4-acl-tools
       - nfs-kernel-server
@@ -77,6 +90,9 @@
       - inkscape
       - chromium-browser
       - deluge
+      - software-properties-common
+      - apt-transport-https
+      - wget
     nodejs_p:
       - npm
       - nodejs
@@ -87,6 +103,24 @@
       - libvirt-bin
       - libvirglrenderer-dev
       - libvirglrenderer0
+    latex_p:
+      - texlive-latex-base
+      - texlive-latex-base-doc
+      - texlive-latex-recommended
+      - texlive-latex-recommended-doc
+      - texlive-latex-extra
+      - texlive-latex-extra-doc
+      - texlive-bibtex-extra
+      - texlive-extra-utils
+      - texlive-pictures
+      - texlive-publishers
+      - texlive-science
+      - texlive-humanities
+      - texlive-games
+      - texlive-xetex
+      - texlive-full
+      - texlive-luatex
+      - texlive-lang-portuguese
     target: terminal
     user: peregrinus
     nfs_server: ubuntu-server-02
