@@ -1,0 +1,92 @@
+UI vesamenu.c32
+PROMPT 1
+
+MENU TITLE Boot Menu
+TIMEOUT 60
+DEFAULT localboot
+
+MENU RESOLUTION 800 600
+
+MENU COLOR title	1;36;44	#ff7a5ada
+MENU COLOR border	30;44	#ff7a5ada
+MENU COLOR scrollbar	30;44	#ff7a5ada
+#MENU COLOR unsel        #7a5ada
+
+LABEL localboot
+MENU DEFAULT
+MENU LABEL Boot from hard disk
+COM32 chain.c32
+APPEND hd0
+
+LABEL memtest3
+MENU LABEL Memtest86+
+KERNEL /memdisk
+INITRD images/memtest/memtest86+-5.01.iso
+APPEND iso raw
+
+LABEL memtest4
+MENU LABEL Memtest86
+KERNEL /memdisk
+INITRD images/memtest/Memtest86-6.1.0.iso
+APPEND iso raw
+
+LABEL hdt
+MENU LABEL Hardware Info
+COM32 hdt.c32
+
+LABEL clonezilla-amd64
+MENU LABEL Clonezilla Live (Ramdisk)
+KERNEL images/clonezilla/clonezilla-amd64/live/vmlinuz
+INITRD images/clonezilla/clonezilla-amd64/live/initrd.img
+APPEND boot=live username=user union=overlay config components quiet noswap edd=on nomodeset nodmraid locales= keyboard-layouts= ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt fetch=http://192.168.5.250:80/clonezilla/clonezilla-amd64/filesystem.squashfs keyboard-layouts=br locales=pt_BR.UTF-8
+
+LABEL gparted-amd64
+MENU LABEL Gparted Live - amd64 (Ramdisk)
+KERNEL images/gparted/gparted-amd64/live/vmlinuz
+INITRD images/gparted/gparted-amd64/live/initrd.img
+APPEND boot=live username=user union=overlay config components quiet noswap edd=on nomodeset nodmraid locales= keyboard-layouts= ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt fetch=http://192.168.5.250:80/gparted/gparted-amd64/filesystem.squashfs keyboard-layouts=br locales=pt_BR.UTF-8
+
+LABEL gparted-i686
+MENU LABEL Gparted Live - i686 (Ramdisk)
+KERNEL images/gparted/gparted-i686/live/vmlinuz
+INITRD images/gparted/gparted-i686/live/initrd.img
+APPEND boot=live username=user union=overlay config components quiet noswap edd=on nomodeset nodmraid locales= keyboard-layouts= ocs_live_run="ocs-live-general" ocs_live_extra_param="" ocs_live_batch=no net.ifnames=0 nosplash noprompt fetch=http://192.168.5.250:80/gparted/gparted-i686/filesystem.squashfs keyboard-layouts=br locales=pt_BR.UTF-8
+
+#LABEL Gparted-amd64
+#   CONFIG /gparted-amd64/syslinux/syslinux.cfg
+
+LABEL winpe-amd64
+MENU LABEL Boot Windows PE 10 from network - amd64
+KERNEL /memdisk
+INITRD images/winpe-amd64/WinPE10.iso
+APPEND iso raw
+
+LABEL winpe-x86
+MENU LABEL Boot Windows PE 10 from network - x86
+KERNEL /memdisk
+INITRD images/winpe-x86/WinPE10.iso
+APPEND iso raw
+
+LABEL srcd-amd64
+MENU LABEL SystemRescueCD 5.0.4 - amd64
+KERNEL images/rescuecd/isolinux/rescue64
+INITRD images/rescuecd/isolinux/initram.igz 
+APPEND netboot=tftp://192.168.5.250/images/rescuecd/sysrcd.dat
+
+LABEL srcd-i686
+MENU LABEL SystemRescueCD 5.0.4 - i686
+KERNEL images/rescuecd/isolinux/rescue32
+INITRD images/rescuecd/isolinux/initram.igz 
+APPEND netboot=tftp://192.168.5.250/images/rescuecd/sysrcd.dat
+
+LABEL gentoo-amd64
+MENU LABEL Gentoo - amd64
+KERNEL images/gentoo/kernel-genkernel-x86_64-4.12.12-gentoo 
+INITRD images/gentoo/initramfs-genkernel-x86_64-4.12.12-gentoo 
+APPEND ip=dhcp root=/dev/nfs nfsroot=192.168.5.250:/nfs/gentoo,rw dolvm doluks domdam console=tty1 apparmor=1 security=apparmor iommu=on quiet splash
+
+LABEL ubuntu-amd64
+MENU LABEL Ubuntu - amd64
+KERNEL images/ubuntu/vmlinuz-4.13.0-21-generic
+INITRD images/ubuntu/initrd.img-4.13.0-21-generic
+APPEND ip=dhcp root=/dev/nfs nfsroot=192.168.5.250:/nfs/ubuntu,rw quiet splash
