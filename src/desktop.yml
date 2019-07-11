@@ -15,9 +15,25 @@
     repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
     state: present
 
-- name: update repositorys and install vscode
+- name: update repositorys
   apt:
     update_cache: yes
+  ignore_errors: yes
+
+- name: install vscode
+  apt:
     name: code
     state: present
+
+- name: install vscode extensions
+  command: code --install-extension "{{ item }}"
+  loop:
+    - "ms-azuretools.vscode-docker"
+    - "ms-python.anaconda-extension-pack"
+    - "ms-python.python"
+    - "ms-vscode.cpptools"
+    - "platformio.platformio-ide"
+    - "redhat.vscode-yaml"
+    - "tomphilbin.gruvbox-themes"
+  become_user: peregrinus
 ...
