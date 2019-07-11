@@ -1,0 +1,69 @@
+---
+- name: create symlinks
+  hosts: all
+  become: yes
+
+  - name: install dnsmasq and lighttpd
+    apt:
+      name: "{{ item }}"
+      state: present
+    loop:
+      - dnsmasq
+      - lighttpd
+
+  - name: copy dnsmasq.conf
+    copy:
+      dest: ./files/dnsmasq.conf
+      src: /etc/dnsmasq.conf
+      owner: root
+      group: root
+
+  - name: create log file for dnsmasq.conf
+    file:
+      path: /var/log/dnsmasq.log
+      owner: root
+      group: root
+      state: touch
+
+  - name: copy lighttpd.conff
+    copy:
+      dest: ./files/lighttpd.conf
+      src: /etc/lighttpd/lighttpd.conf
+      owner: root
+      group: root
+
+  - name: copy exports
+    copy:
+      dest: ./files/exports
+      src: /etc/exports
+      owner: root
+      group: root
+
+  - name: create directories
+    file:
+      path: "{{ item }}"
+      owner: root
+      group: root
+    loop:
+      - /nfs
+      - /nfs/gentoo
+      - /nfs/ubuntu
+      - /nfs/partimag
+      - /mnt/windows
+      - /var/www/htdocs
+      - /var/www/htdocs/clonezilla
+      - /var/www/htdocs/clonezilla-amd64
+      - /var/www/htdocs/gparted
+      - /var/www/htdocs/gparted-amd64
+
+  - name: enable service dnsmasq
+    systemd:
+      name: dnsmasq
+      state: started
+      enabled: yes
+
+  - name: start service lighttpd
+    systemd:
+      name: lighttpd
+      state: started
+      enabled: yes
