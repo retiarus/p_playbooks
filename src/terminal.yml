@@ -20,8 +20,20 @@
 
 - name: install pipenv, virtualenvwrapper
   pip:
-    name: pipenv
+    name: "{{ item }}"
     executable: pip3
+    extra_args: --user
+  with_items:
+    - pipenv
+    - virtualenvwrapper
+  become: yes
+  become_user: peregrinus
+  ignore_errors: yes
+
+- name: install pipenv, virtualenvwrapper
+  pip:
+    name: "{{ item }}"
+    executable: pip
     extra_args: --user
   with_items:
     - pipenv
