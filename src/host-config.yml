@@ -53,6 +53,8 @@
     docker_p:
       - docker
       - docker.io
+      - python3-docker
+      - python-docker
     container_lxc_p:
       - lxc
       - lxc-dev
@@ -155,4 +157,12 @@
 
     - include_tasks: full.yml
       when: target == "full"
+
+    - name: install task
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ set }}"
+      when: set is defined
+      ignore_errors: True
 ...
