@@ -26,7 +26,7 @@
       group: root
       state: touch
 
-  - name: copy lighttpd.conff
+  - name: copy lighttpd.conf
     copy:
       src: ./files/lighttpd.conf
       dest: /etc/lighttpd/lighttpd.conf
@@ -54,9 +54,10 @@
       - /mnt/windows
       - /var/www/htdocs
       - /var/www/htdocs/clonezilla
-      - /var/www/htdocs/clonezilla-amd64
+      - /var/www/htdocs/clonezilla/clonezilla-amd64
       - /var/www/htdocs/gparted
-      - /var/www/htdocs/gparted-amd64
+      - /var/www/htdocs/gparted/gparted-amd64
+      - /var/www/htdocs/gparted/gparted-i686
 
   - name: create directories to tftpboot
     file:
@@ -86,7 +87,7 @@
 
   - name: add mount points to fstab
     lineinfile:
-      path: "/etc/hosts"
+      path: "/etc/fstab"
       line: "{{ item }}"
     loop:
       - "UUID=2079856a-bb1f-46e8-b7a6-8fe32014f4c6  /tftpboot/images                  btrfs   noatime,compress=lzo,space_cache,autodefrag,subvol=images   0 1"
@@ -97,18 +98,21 @@
       src: /tftpboot/images/clonezilla/clonezilla-amd64/live/filesystem.squashfs
       dest: /var/www/htdocs/clonezilla/clonezilla-amd64/filesystem.squashfs
       state: link
+      force: yes
 
   - name: create links gparted-amd64
     file:
       src: /tftpboot/images/gparted/gparted-amd64/live/filesystem.squashfs
       dest: /var/www/htdocs/gparted/gparted-amd64/filesystem.squashfs
       state: link
+      force: yes
 
   - name: create links gparted-i686
     file:
       src: /tftpboot/images/gparted/gparted-i686/live/filesystem.squashfs
       dest: /var/www/htdocs/gparted/gparted-i686/filesystem.squashfs
       state: link
+      force: yes
 
   - name: enable service dnsmasq
     systemd:
