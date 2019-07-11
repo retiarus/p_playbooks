@@ -1,0 +1,32 @@
+---
+- name: config and initialize influxdb service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create group influxdb
+      group:
+        name: influxdb
+        state: present
+        gid: 2004
+
+    - name: create user influxdb
+      user:
+         name: influxdb
+         group: influxdb
+         shell: /bin/false
+         home: /var/lib/influxdb/
+         uid: 2004
+
+    - name: copy config files
+      copy:
+        src: ./files/influxdb.conf
+        dest: /etc/influxdb/influxdb.conf
+        owner: influxdb
+        group: influxdb
+
+          #    - name: generate deluge service using docker-compose
+          #      docker_compose:
+          #        project_src: ./docker-files/
+          #        services: deluge
+          #        state: present
