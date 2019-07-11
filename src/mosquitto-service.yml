@@ -1,0 +1,53 @@
+---
+- name: config and initialize mosquitto service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create group mosquitto
+      group:
+        name: mosquitto
+        state: present
+        gid: 1883
+
+    - name: create user mosquitto
+      user:
+         name: mosquitto
+         group: mosquitto
+         shell: /bin/false
+         home: /var/lib/mosquitto/
+         uid: 1883
+
+    - name: create data directory for mosquitto
+      file:
+        path: /var/lib/mosquitto/data
+        owner: mosquitto
+        group: mosquitto
+        state: directory
+
+    - name: create log directory for mosquitto
+      file:
+        path: /var/lib/mosquitto/log
+        owner: mosquitto
+        group: mosquitto
+        state: directory
+
+    - name: copy config file
+      copy:
+        src: ./files/mosquito.conf
+        dest: /etc/mosquitto/mosquitto.conf
+        owner: mosquitto
+        group: mosquitto
+
+    - name: copy password file
+      copy:
+        src: ./files/jp.pw
+        dest: /etc/mosquitto/jp.pw
+        owner: mosquitto
+        group: mosquitto
+
+        #    - name: generate mosquitto service using docker-compose
+        #      docker_compose:
+        #        project_src: ./docker-files/
+        #        services: docker
+        #        state: present
