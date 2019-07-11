@@ -11,23 +11,39 @@ services:
       - UMASK_SET=022
       - TZ=America/Sao_Paulo
     volumes:
-      - /var/lib/deluge/config:/config
+      - /var/lib/deluge:/config
       - /mnt/Arquivos-midias:/downloads
-    restart: unless-stopped
+        #restart: unless-stopped
 
-    #  heimdall:
-    #    image: linuxserver/heimdall
-    #    container_name: heimdall
-    #    environment:
-    #      - PUID=2001
-    #      - PGID=2001
-    #      - TZ=America/Sao_Paulo
-    #    volumes:
-    #      - /path/to/appdata/config:/config
-    #    ports:
-    #      - 80:80
-    #      - 443:443
-    #    restart: unless-stopped
+  flexget:
+    image: cpoppema/docker-flexget
+    container_name: flexget
+    environment:
+      - PUID=2001
+      - PGID=2001
+      - WEB_PASSWD=a1b2c3d4
+      - TORRENT_PLUGIN=deluge
+      - TZ=America/Sao_Paulo
+      - FLEXGET_LOG_LEVEL=debug
+    ports:
+      - "5050:5050"
+    volumes:
+      - /var/lib/flexget:/config
+      - /mnt/Arquivos-midias:/downloads
+
+  heimdall:
+    image: linuxserver/heimdall
+    container_name: heimdall
+    environment:
+      - PUID=2002
+      - PGID=2002
+      - TZ=America/Sao_Paulo
+    volumes:
+      - /var/lib/heimdall:/config
+    ports:
+      - 80:80
+      - 443:443
+    restart: unless-stopped
 
   mosquitto:
     image: eclipse-mosquitto
@@ -56,8 +72,8 @@ services:
      - "8086:8086"
     volumes:
      - /var/lib/influxdb/data:/var/lib/influxdb
-     - /var/lib/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
-    netwokrs:
+     - /etc/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+    networks:
      - iot_grafana
 
   grafana:
@@ -156,5 +172,5 @@ volumes:
   grafana-conf:
     driver: local
 
-networkrs:
+networks:
   iot_grafana:
