@@ -1,0 +1,72 @@
+templates:
+  tv:
+    deluge:
+      host: 127.0.0.1
+      port: 58846
+      username: peregrinus
+      password: a1b2c3d4
+      path: /var/lib/deluge/Downloads/
+    download: /var/lib/deluge/Downloads/
+    quality: webdl|hdtv <720p xvid|divx|h264|h265
+    series:
+      - the defenders
+      - wynonna earp
+      - dark matter
+      - killjoys
+      - game of thrones
+      - westworld
+      - the last ship
+      - teen wolf
+      - preacher
+      - shadowhunters
+      - midnight texas
+      - shooter
+      - suits
+      - salvation
+      - victoria
+      - arrow
+      - the flash
+      - the 100
+      - dc's legends of tomorrow
+      - black lightning
+      - demolidor
+      - jessica jones
+      - ironfist
+      - luke cage
+      - gotham
+      - missions
+      - the orville
+      - marvel's inhumans
+      - marvell's agents of shield
+      - star trek discovery
+      - the gifted
+      - lucifer
+      - outlander
+      - van helsing
+      - the shannara chronicles
+      - travelers
+      - the magicians
+      - the expanse
+      - krypton
+      - altered carbon
+      - lost in space
+      - into the badlands
+      - legion
+      - timeless
+      - charmed
+      - the good doctor
+      - a discover of witches
+      - chilling adventures of sabrina
+      - counterpart
+      - young justice
+
+tasks:
+  task-series:
+    #    proxy: socks5://127.0.0.1:9100
+    rss: https://eztv.ag/ezrss.xml
+    template: tv
+
+schedules:
+  - tasks: '*'
+    interval:
+      minutes: 5
