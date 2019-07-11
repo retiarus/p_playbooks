@@ -3,6 +3,7 @@
   hosts: all
   become: yes
 
+  tasks:
   - name: install dnsmasq and lighttpd
     apt:
       name: "{{ item }}"
@@ -13,8 +14,8 @@
 
   - name: copy dnsmasq.conf
     copy:
-      dest: ./files/dnsmasq.conf
-      src: /etc/dnsmasq.conf
+      src: ./files/dnsmasq.conf
+      dest: /etc/dnsmasq.conf
       owner: root
       group: root
 
@@ -27,15 +28,15 @@
 
   - name: copy lighttpd.conff
     copy:
-      dest: ./files/lighttpd.conf
-      src: /etc/lighttpd/lighttpd.conf
+      src: ./files/lighttpd.conf
+      dest: /etc/lighttpd/lighttpd.conf
       owner: root
       group: root
 
   - name: copy exports
     copy:
-      dest: ./files/exports
-      src: /etc/exports
+      src: ./files/exports
+      dest: /etc/exports
       owner: root
       group: root
 
@@ -44,6 +45,7 @@
       path: "{{ item }}"
       owner: root
       group: root
+      state: directory
     loop:
       - /nfs
       - /nfs/gentoo
@@ -55,6 +57,32 @@
       - /var/www/htdocs/clonezilla-amd64
       - /var/www/htdocs/gparted
       - /var/www/htdocs/gparted-amd64
+
+  - name: create directories to tftpboot
+    file:
+      path: "/tftpboot/{{ item.path }}"
+      state: directory
+      mode: '{{ item.mode }}'
+      owner: root
+      group: root
+    with_filetree:
+    - "./files/tftpboot/"
+    when: item.state == 'directory'
+    loop_control:
+      label: "{{ item.path }}"
+
+  - name: Copy files
+    copy:
+      src: "{{ item.src }}"
+      dest: "/tftpboot/{{ item.path }}"
+      mode: "{{ item.mode }}"
+      owner: root
+      group: root
+    with_filetree:
+      - "./files/tftpboot/"
+    when: item.state == 'file'
+    loop_control:
+      label: "{{ item.path }}"
 
   - name: enable service dnsmasq
     systemd:
