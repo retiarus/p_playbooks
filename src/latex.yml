@@ -1,0 +1,7 @@
+---
+- name: install latex packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ latex_p }}"
+...
