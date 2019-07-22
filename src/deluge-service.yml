@@ -34,8 +34,8 @@
       with_fileglob:
         - ./files/deluge/*
 
-    - name: generate deluge service using docker-compose
-      docker_compose:
-        project_src: ./docker-files/
-        services: deluge
-        state: present
+          #    - name: generate deluge service using docker-compose
+          #      docker_compose:
+          #        project_src: ./docker-files/
+          #        services: deluge
+          #        state: present
