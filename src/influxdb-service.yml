@@ -18,6 +18,11 @@
          home: /var/lib/influxdb/
          uid: 2004
 
+    - name: create dir /etc/influxdb
+      file:
+        path: /etc/influxdb
+        state: directory
+
     - name: copy config files
       copy:
         src: ./files/influxdb.conf
