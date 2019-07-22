@@ -1,0 +1,38 @@
+---
+- name: create symlinks
+  hosts: localhost
+  become: yes
+  
+  tasks:
+    - name: create group flexget
+      group:
+        name: flexget
+        state: present
+        gid: 2001
+
+    - name: create user flexget
+      user:
+         name: flexget
+         group: flexget
+         shell: /bin/false
+         home: /var/lib/flexget
+         uid: 2001
+
+    - name: add user flexget to group deluge
+      user:
+         name: flexget
+         groups: deluge
+         append: yes
+
+    - name: add user deluge to group flexget
+      user:
+         name: deluge
+         groups: flexget
+         append: yes
+
+    - name: copy config files
+      copy:
+        src: config.yml
+        dest: /var/lib/flexget/
+        owner: flexget
+        group: flexget
