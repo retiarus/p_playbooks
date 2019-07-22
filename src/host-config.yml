@@ -81,6 +81,9 @@
       - remmina-plugin-telepathy
       - remmina-plugin-xdmcp
       - remmina-plugin-nx
+      - remmina-plugin-rdp
+      - libfreerdp-plugins-standard
+      - rdesktop
       - virt-manager
       - pavucontrol
       - smplayer
