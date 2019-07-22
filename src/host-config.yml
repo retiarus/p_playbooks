@@ -1,6 +1,6 @@
 ---
 - name: Install basic aplications
-  hosts: "{{ vhost | default('localhost') }}"
+  hosts: "{{ vhost | default('all') }}"
   become: yes
   become_user: root
   vars:
