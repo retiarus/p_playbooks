@@ -13,7 +13,7 @@ services:
     volumes:
       - /var/lib/deluge:/config
       - /mnt/Arquivos-midias:/downloads
-        #restart: unless-stopped
+    restart: unless-stopped
 
   flexget:
     image: cpoppema/docker-flexget
@@ -44,6 +44,14 @@ services:
       - 80:80
       - 443:443
     restart: unless-stopped
+
+  portainer:
+    image: portainer/portainer
+    container_name: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "9000:9000"
 
   mosquitto:
     image: eclipse-mosquitto
