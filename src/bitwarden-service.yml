@@ -1,0 +1,69 @@
+---
+- name: config bitwarden service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create group bitwarden
+      group:
+        name: bitwarden
+        state: present
+        gid: 1030
+
+    - name: create user bitwarden
+      user:
+         name: bitwarden
+         group: bitwarden
+         shell: /bin/false
+         home: /var/lib/bitwarden/data
+         uid: 1030
+
+    - name: create /var/lib/bitwarden/certs
+      file:
+        path: /var/lib/bitwarden
+        state: directory
+        owner: bitwarden
+        group: bitwarden
+
+    - name: create /etc/bitwarden/certs
+      file:
+        path: /etc/bitwarden
+        state: directory
+        owner: bitwarden
+        group: bitwarden
+
+    - name: generate CA key pair
+      openssl_privatekey:
+        path: "/etc/certs/bitwarden_ca.key"
+        passphrase:
+        cipher: aes256
+        size: 2056
+
+        #    - name: create ca certificate request
+        #      openssl_csr:
+        #        path: "/var/lib/bitwarden/certs/bitwarden_ca.csr"
+        #        privatekey_path: "/var/lib/bitwarden/certs/bitwarden_ca.key"
+        #        privatekey_passphrase: "{{ pass }}"
+        #        common_name: bitwarden
+        #
+        #    - name: Generate a Self Signed OpenSSL certificate
+        #      openssl_certificate:
+        #      path: "/var/lib/bitwarden/certs/mqtt_ca.crt"
+        #      privatekey_path: "/var/lib/bitwarden/certs/bitwarden_ca.key"
+        #      csr_path: "/var/lib/bitwarden/certs/bitwarden_ca.csr"
+        #      provider: selfsigned
+      #
+        #    - name: generate bitwarden broker key pair
+        #      openssl_privatekey:
+        #        path: "/var/lib/bitwarden/certs/mqtt_srv.key"
+        #        passphrase: ansible
+        #        cipher: aes256
+        #        size: 2056
+        #
+        #    - name: create a certificate request from ca
+        #      openssl_csr:
+        #        path: "/var/lib/bitwarden/certs/mqtt_srv.csr"
+        #        privatekey_path: "/var/lib/bitwarden/certs/mqtt_srv.key"
+        #        privatekey_passphrase: ansible
+        #        common_name: pi-router
+        #
