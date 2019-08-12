@@ -1,0 +1,52 @@
+---
+- name: config and initialize clamav service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: install clamav
+      apt:
+        name: "{{ item }}"
+        state: present
+        update_cache: yes
+      loop:
+        - clamtk-gnome
+        - clamtk
+        - clamtk-nautilus
+        - clamav
+        - clamav-daemon
+
+    - name: stop clamav-freshclam
+      systemd:
+        name: clamav-freshclam.service
+        state: stopped
+
+    - name: stop clamav-daemon
+      systemd:
+        name: clamav-daemon
+        state: stopped
+
+    - name: update clamav signatures
+      command: freshclam
+      ignore_errors: yes
+
+    - name: copy config files
+      copy:
+        src: "{{ item }}"
+        dest: /etc/clamav/
+        owner: root
+        group: root
+      with_fileglob:
+        - ./files/clamav/*
+
+    - name: start and enable clamav-freshclam
+      systemd:
+        name: clamav-freshclam
+        state: started
+        enabled: yes
+
+    - name: start and enable clamav-daemon
+      systemd:
+        name: clamav-daemon
+        state: started
+        enabled: yes
