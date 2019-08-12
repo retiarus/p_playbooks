@@ -32,9 +32,16 @@
         group: mosquitto
         state: directory
 
+    - name: create etc directory for mosquitto
+      file:
+        path: /etc/mosquitto
+        owner: mosquitto
+        group: mosquitto
+        state: directory
+
     - name: copy config file
       copy:
-        src: ./files/mosquito.conf
+        src: ./files/mosquitto.conf
         dest: /etc/mosquitto/mosquitto.conf
         owner: mosquitto
         group: mosquitto
