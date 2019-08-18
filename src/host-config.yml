@@ -1,5 +1,5 @@
 ---
-- name: Install basic aplications
+- name: Host Config
   hosts: "{{ vhost | default('all') }}"
   become: yes
   become_user: root
@@ -73,6 +73,9 @@
       - sakura
       - uget
       - mate-desktop-environment
+      - mate-power-manager
+      - mate-screensaver
+      - mate-user-share
       - pluma
       - synergy
       - spice-client-gtk
@@ -98,6 +101,8 @@
       - software-properties-common
       - apt-transport-https
       - wget
+      - guake
+      - parcellite
     nodejs_p:
       - npm
       - nodejs
@@ -152,14 +157,17 @@
     - include_tasks: virt.yml
       when: target == "virt"
 
+    - include_tasks: latex.yml
+      when: target == "latex"
+
     - include_tasks: nfs-client.yml
       when: target == "nfs-client"
 
     - include_tasks: nfs-server.yml
       when: target == "nfs-server" and ansible_hostname == nfs_server
 
-    - include_tasks: full.yml
-      when: target == "full"
+    - include_tasks: full-client.yml
+      when: target == "full-client"
 
     - name: install task
       apt:
