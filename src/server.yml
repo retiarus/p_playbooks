@@ -5,6 +5,12 @@
     state: present
   loop: "{{ server_p }}"
 
+- name: install lxc packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ container_lxc_p }}"
+
 - name: stop and disabled service lxc
   systemd:
     name: lxc
