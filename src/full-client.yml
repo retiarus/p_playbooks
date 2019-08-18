@@ -1,9 +1,14 @@
 ---
-- include_tasks: basic.yml
 - include_tasks: terminal.yml
 - include_tasks: avahi.yml
-- include_tasks: server.yml
 - include_tasks: desktop.yml
 - include_tasks: nodejs.yml
 - include_tasks: virt.yml
+- include_tasks: latex.yml
+
+- name: instal docker packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ docker_p }}"
 ...
