@@ -172,6 +172,61 @@ services:
       - /traefik/traefik.toml:/etc/traefik/traefik.toml
       - /traefik/acme.json:/acme.json
 
+  jupyterlab:
+    container_name: jupyterlab
+    image: jupyter/datascience-notebook
+    environment:
+      - NB_USER=peregrinus
+      - JUPYTER_ENABLE_LAB=yes
+      - GEN_CERT=yes
+    volumes:
+      - /home/peregrinus:/home/jovyan/work
+    ports:
+      - 8080:8888
+    networks:
+      - jupyter_network
+
+  jupyterhub:
+    container_name: jupyterhub
+    image: jupyterhub/jupyterhub
+    ports:
+      - 8000:8000
+    networks:
+      - jupyter_network
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    environment:
+      DOCKER_NETWORK_NAME: jupyter_network
+      DOCKER_JUPYTER_IMAGE: jupyter/datascience-notebook
+
+  vscodeserver:
+    container_name: vscodeserver
+    image: codercom/code-server
+    ports:
+      - 8443:8443
+    volumes:
+      - /mnt/experimentos:/home/coder/project
+    command: --allow-http --no-auth
+    networks:
+      - jupyter_network
+
+  bitwarden:
+    image: bitwardenrs/server:latest
+    user: 1030:1030
+    volumes:
+      - /var/lib/bitwarden/data:/data
+      - /var/lib/bitwarden/certs:/ssl
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - ROCKET_PORT=1024
+        #    - ROCKET_TLS='{certs="/ssl/certs.pem", key="/ssl/key.pem"}'
+    ports:
+      - 8080:1024
+      - 3012:3012
+    restart: unless-stopped
+    networks:
+      - local
+
 volumes:
   grafana-db:
     driver: local
@@ -182,3 +237,5 @@ volumes:
 
 networks:
   iot_grafana:
+  jupyter_network:
+  local:
