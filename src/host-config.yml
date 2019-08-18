@@ -133,7 +133,6 @@
       - texlive-lang-portuguese
     target: terminal
     user: peregrinus
-    nfs_server: ubuntu-server-02
 
   tasks:
     - include_tasks: basic.yml
@@ -160,14 +159,11 @@
     - include_tasks: latex.yml
       when: target == "latex"
 
-    - include_tasks: nfs-client.yml
-      when: target == "nfs-client"
-
-    - include_tasks: nfs-server.yml
-      when: target == "nfs-server" and ansible_hostname == nfs_server
-
     - include_tasks: full-client.yml
       when: target == "full-client"
+
+    - include_tasks: full-server.yml
+      when: target == "full-server"
 
     - name: install task
       apt:
