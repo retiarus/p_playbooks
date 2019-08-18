@@ -15,6 +15,13 @@
   loop: "{{ serial_p }}"
   ignore_errors: True
 
+- name: install bridges package
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ bridges_p }}"
+  ignore_errors: True
+
 - name: set default shell to zsh
   user:
     name: peregrinus
@@ -80,6 +87,8 @@
     owner: "{{ user }}"
     group: "{{ user }}"
   with_items:
+    - '/home/{{ user }}/arquivos'
+    - '/home/{{ user }}/experimentos'
     - '/mnt/falco03'
     - '/mnt/falco06'
     - '/mnt/iso'
@@ -119,8 +128,8 @@
     path: "/etc/fstab"
     line: "{{ item }}"
   loop:
-    - "ubuntu-server-02.falco.net:experimentos     /home/peregrinus/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-server-02.falco.net:arquivos         /home/peregrinus/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-server-02.falco.net:experimentos     /mnt/experimentos                 nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-server-02.falco.net:arquivos         /mnt/arquivos                     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "ubuntu-02.falco.net:experimentos     /home/peregrinus/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "ubuntu-02.falco.net:arquivos         /home/peregrinus/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "ubuntu-02.falco.net:experimentos     /mnt/experimentos                 nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "ubuntu-02.falco.net:arquivos         /mnt/arquivos                     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
 ...
