@@ -3,5 +3,5 @@
   apt:
     name: "{{ item }}"
     state: present
-  loop: "{{ desktop_p }}"
+  loop: "{{ nodejs_p }}"
 ...
