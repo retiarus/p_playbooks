@@ -1,9 +1,18 @@
 ---
+- include_tasks: basic.yml
+
 - name: install terminal packages
   apt:
     name: "{{ item }}"
     state: present
   loop: "{{ terminal_p }}"
+  ignore_errors: True
+
+- name: install serial packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ serial_p }}"
   ignore_errors: True
 
 - name: set default shell to zsh
@@ -71,7 +80,6 @@
     owner: "{{ user }}"
     group: "{{ user }}"
   with_items:
-    - '/mnt/falco02'
     - '/mnt/falco03'
     - '/mnt/falco06'
     - '/mnt/iso'
@@ -84,14 +92,9 @@
     - '/mnt/experimentos'
     - '/mnt/downloads-flexget'
     - '/mnt/mpiuser'
-    - '/mnt/sda'
-    - '/mnt/sdb'
-    - '/mnt/sdc'
-    - '/mnt/sdd'
-    - '/mnt/sde'
-    - '/mnt/sdf'
-    - '/mnt/sdg'
-    - '/mnt/sdh'
+    - '/mnt/ubuntu-01/home'
+    - '/mnt/ubuntu-02/home'
+    - '/mnt/ubuntu-03/home'
     - '/mnt/ubuntu-server-02:raid_falco'
     - '/mnt/home_falco'
   ignore_errors: yes
@@ -101,10 +104,12 @@
     path: "/etc/hosts"
     line: "{{ item }}"
   loop:
-    - "192.168.5.11  ubuntu-server-01 ubuntu-server-01.falco.net"
-    - "192.168.5.12  ubuntu-server-02 ubuntu-server-02.falco.net"
-    - "192.168.5.13  ubuntu-server-03 ubuntu-server-03.falco.net"
+    - "192.168.5.11  ubuntu-01        ubuntu-01.falco.net"
+    - "192.168.5.12  ubuntu-02        ubuntu-02.falco.net"
+    - "192.168.5.13  ubuntu-03        ubuntu-03.falco.net"
     - "192.168.5.3   falco03          falco03.falco.net"
+    - "192.168.5.4   falco04          falco04.falco.net"
+    - "192.168.5.6   falco06          falco06.falco.net"
     - "192.168.5.254 openwrt          openwrt.falco.net"
     - "192.168.5.251 cubietruck       cubietruck.falco.net"
     - "192.168.5.254 OPNsense         OPNsense.falco.net"
