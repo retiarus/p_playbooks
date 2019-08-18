@@ -5,6 +5,12 @@
     state: present
   loop: "{{ desktop_p }}"
 
+- name: install pulseaudio packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ pulseaudio_p }}"
+
 - name: add Microsoft key
   apt_key:
     url: https://packages.microsoft.com/keys/microsoft.asc
