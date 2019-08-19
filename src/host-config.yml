@@ -103,6 +103,7 @@
       - wget
       - guake
       - parcellite
+      - blueman
     nodejs_p:
       - npm
       - nodejs
