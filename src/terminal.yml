@@ -24,12 +24,12 @@
 
 - name: set default shell to zsh
   user:
-    name: peregrinus
+    name: "{{ user }}"
     shell: /bin/zsh
 
-- name: Create a 4096-bit SSH key for user peregrinus
+- name: Create a 4096-bit SSH key for user "{{ user }}"
   user:
-    name: peregrinus
+    name: "{{ user }}"
     generate_ssh_key: yes
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
@@ -43,7 +43,7 @@
     - pipenv
     - virtualenvwrapper
   become: yes
-  become_user: peregrinus
+  become_user: "{{ user }}"
   ignore_errors: yes
 
 - name: install pipenv, virtualenvwrapper
@@ -55,25 +55,25 @@
     - pipenv
     - virtualenvwrapper
   become: yes
-  become_user: peregrinus
+  become_user: "{{ user }}"
   ignore_errors: yes
 
-- name: add user peregrinus to dialout
+- name: add user "{{ user }}" to dialout
   user:
-    name: peregrinus
+    name: "{{ user }}"
     groups: dialout, users
     append: yes
 
-- name: set primary group to peregrinus
+- name: set primary group to "{{ user }}"
   user:
-    name: peregrinus
-    group: peregrinus
+    name: "{{ user }"
+    group: "{{ user }}"
     append: yes
 
 - name: clone p_dotfiles
   git:
     repo: 'https://github.com/retiarus/p_dotfiles'
-    dest: "{{ user_dotfiles | default('/home/peregrinus/p_dotfiles') }}"
+    dest: '/home/{{ user }}/p_dotfiles'
     clone: yes
     update: yes
     recursive: yes
@@ -127,9 +127,10 @@
   lineinfile:
     path: "/etc/fstab"
     line: "{{ item }}"
+  when: ansible_facts['hostname'] != 'ubuntu-02'
   loop:
-    - "ubuntu-02.falco.net:experimentos     /home/peregrinus/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-02.falco.net:arquivos         /home/peregrinus/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "ubuntu-02.falco.net:experimentos     /home/{{ user }}/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "ubuntu-02.falco.net:arquivos         /home/{{ user }}/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "ubuntu-02.falco.net:experimentos     /mnt/experimentos                 nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "ubuntu-02.falco.net:arquivos         /mnt/arquivos                     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
 ...
