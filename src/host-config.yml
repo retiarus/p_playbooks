@@ -37,6 +37,8 @@
       - nbd-client
       - nfstrace
       - build-essential
+      - aptitude
+      - neovim
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
@@ -103,7 +105,6 @@
       - wget
       - guake
       - parcellite
-      - blueman
     nodejs_p:
       - npm
       - nodejs
@@ -132,6 +133,19 @@
       - texlive-full
       - texlive-luatex
       - texlive-lang-portuguese
+    bluetooth_p:
+      - blueman
+      - bluetooth
+      - bluez-btsco
+      - bluez-hcidump
+      - bluez-obexd
+      - bluez-tests
+      - bluez-tools
+      - btscanner
+      - pulseaudio
+      - pulseaudio-utils
+      - pavucontrol
+      - pulseaudio-module-bluetooth
     target: terminal
     user: peregrinus
 
@@ -159,6 +173,9 @@
 
     - include_tasks: latex.yml
       when: target == "latex"
+
+    - include_tasks: bluetooth.yml
+      when: target == "bluetooth"
 
     - include_tasks: full-client.yml
       when: target == "full-client"

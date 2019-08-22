@@ -1,0 +1,41 @@
+---
+- name: add repository
+  apt_repository:
+    repo: "ppa:bluetooth/bluez"
+    state: present
+
+- name: update repositorys
+  apt:
+    update_cache: yes
+  ignore_errors: yes
+
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+
+- name: install bluetooth packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ bluetooth_p }}"
+
+- name: copy config files
+  copy:
+    src: "{{ item }}"
+    dest: /etc/bluetooth/
+    owner: root
+    group: root
+  with_fileglob:
+    - ./files/bluetooth/*
+
+- name: stopped service bluetooth
+  systemd:
+    name: bluetooth
+    state: stopped
+
+- name: started service bluetooth
+  systemd:
+    name: bluetooth
+    state: started
+...
