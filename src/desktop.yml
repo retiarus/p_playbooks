@@ -42,4 +42,6 @@
     - "redhat.vscode-yaml"
     - "tomphilbin.gruvbox-themes"
   become_user: peregrinus
+
+- include_tasks: kitty.yml
 ...
