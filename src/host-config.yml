@@ -169,6 +169,30 @@
       - ninja-build
       - autoconf
       - automake
+      - pkg-config
+    kitty_p:
+      - python3
+      - libharfbuzz-bin
+      - libharfbuzz-dev
+      - libpng-dev
+      - libfreetype6
+      - libfreetype6-dev
+      - fontconfig
+      - libfontconfig1
+      - libfontconfig1-dev
+      - libcanberra0
+      - libcanberra-dev
+      - python-pygments
+      - python3-pygments
+      - libdbus-1-dev
+      - libxcursor-dev
+      - libxrandr-dev
+      - libxi-dev
+      - libxinerama-dev
+      - libgl1-mesa-dev
+      - libxkbcommon-x11-dev
+      - libpython-dev
+      - libpython3-dev
     target: terminal
     user: peregrinus
 
@@ -202,6 +226,9 @@
 
     - include_tasks: neovim.yml
       when: target == "neovim"
+
+    - include_tasks: kitty.yml
+      when: target == "kitty"
 
     - include_tasks: full-client.yml
       when: target == "full-client"

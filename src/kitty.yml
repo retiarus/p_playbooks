@@ -1,0 +1,32 @@
+---
+- name: install kitty packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ kitty_p }}"
+
+- name: clone kitty
+  git:
+    repo: 'https://github.com/kovidgoyal/kitty'
+    dest: '/home/{{ user }}/kitty'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: run make
+  command: "make"
+  args:
+    chdir: "/home/{{ user }}/kitty"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: create ln
+  file:
+    src: "/home/{{ user }}/kitty/kitty/launcher/kitty"
+    dest: "/home/{{ user }}/bin/kitty"
+    state: link
+    owner: peregrinus
+    group: peregrinus
+...
