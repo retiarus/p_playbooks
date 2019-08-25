@@ -1,0 +1,31 @@
+---
+- name: config and initialize virtualbox service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: add Oracle key
+      apt_key:
+        url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
+        state: present
+
+    - name: add Oracle key
+      apt_key:
+        url: https://www.virtualbox.org/download/oracle_vbox.asc
+        state: present
+
+    - name: add Oracle repository
+      apt_repository:
+        repo: "deb http://download.virtualbox.org/virtualbox/debian bionic contrib"
+        state: present
+
+    - name: update repositorys
+      apt:
+        update_cache: yes
+      ignore_errors: yes
+
+    - name: install virtualbox
+      apt:
+        name: virtualbox-6.0
+        state: present
+...
