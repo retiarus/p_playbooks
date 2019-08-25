@@ -38,7 +38,8 @@
       - nfstrace
       - build-essential
       - aptitude
-      - neovim
+      - cmake
+      - autossh
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
@@ -146,6 +147,28 @@
       - pulseaudio-utils
       - pavucontrol
       - pulseaudio-module-bluetooth
+    neovim_p:
+      - gperf
+      - luajit
+      - luarocks
+      - libuv1-dev
+      - libluajit-5.1-dev
+      - libunibilium-dev
+      - libmsgpack-dev
+      - libtermkey-dev
+      - libvterm-dev
+      - lua-system
+      - lua-dkjson
+      - lua-say
+      - lua-luassert
+      - lua-term
+      - lua-mediator
+      - m4
+      - lua-luv
+      - lua-luv-dev
+      - ninja-build
+      - autoconf
+      - automake
     target: terminal
     user: peregrinus
 
@@ -176,6 +199,9 @@
 
     - include_tasks: bluetooth.yml
       when: target == "bluetooth"
+
+    - include_tasks: neovim.yml
+      when: target == "neovim"
 
     - include_tasks: full-client.yml
       when: target == "full-client"

@@ -1,0 +1,38 @@
+---
+- name: install neovim packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ neovim_p }}"
+
+- name: clone neovim
+  git:
+    repo: 'https://github.com/neovim/neovim'
+    dest: '/home/{{ user }}/neovim'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: run distclean
+  command: 'make distclean'
+  args:
+    chdir: "/home/{{ user }}/neovim/"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: run make
+  command: "make CMAKE_BUILD_TYPE=Release"
+  args:
+    chdir: "/home/{{ user }}/neovim"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: run make install
+  command: "make CMAKE_INSTALL_PREFIX=/home/{{ user }}/ install"
+  args:
+    chdir: "/home/{{ user }}/neovim"
+  become: yes
+  become_user: "{{ user }}"
+...
