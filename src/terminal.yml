@@ -22,12 +22,14 @@
   loop: "{{ bridges_p }}"
   ignore_errors: True
 
+- include_tasks: neovim.yml
+
 - name: set default shell to zsh
   user:
     name: "{{ user }}"
     shell: /bin/zsh
 
-- name: Create a 4096-bit SSH key for user "{{ user }}"
+- name: Create a 4096-bit SSH key for user {{ user }}
   user:
     name: "{{ user }}"
     generate_ssh_key: yes
@@ -58,15 +60,15 @@
   become_user: "{{ user }}"
   ignore_errors: yes
 
-- name: add user "{{ user }}" to dialout
+- name: add user {{ user }} to dialout
   user:
     name: "{{ user }}"
     groups: dialout, users
     append: yes
 
-- name: set primary group to "{{ user }}"
+- name: set primary group {{ user }}
   user:
-    name: "{{ user }"
+    name: "{{ user }}"
     group: "{{ user }}"
     append: yes
 
@@ -119,7 +121,6 @@
     - "192.168.5.3   falco03          falco03.falco.net"
     - "192.168.5.4   falco04          falco04.falco.net"
     - "192.168.5.6   falco06          falco06.falco.net"
-    - "192.168.5.254 openwrt          openwrt.falco.net"
     - "192.168.5.251 cubietruck       cubietruck.falco.net"
     - "192.168.5.254 OPNsense         OPNsense.falco.net"
 
