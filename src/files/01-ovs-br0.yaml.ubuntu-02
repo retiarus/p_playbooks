@@ -1,0 +1,10 @@
+network:
+  ethernets:
+    ovs-br0:
+      addresses: [192.168.5.12/24]
+      gateway4: 192.168.5.1
+      nameservers:
+        search: [falco.net]
+        addresses: [192.168.5.1]
+      dhcp4: no
+  version: 2
