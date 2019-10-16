@@ -34,4 +34,12 @@
     name: lxcfs
     enabled: no
     state: stopped
+
+- name: copy exports for ubuntu-02
+  copy:
+    src: "./files/exports.ubuntu-02"
+    dest: /etc/exports
+    owner: root
+    group: root
+  when: ansible_facts['hostname'] == 'ubuntu-02'
 ...
