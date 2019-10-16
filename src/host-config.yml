@@ -45,6 +45,7 @@
       - docker.io
       - python3-docker
       - python-docker
+      - pylama
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
