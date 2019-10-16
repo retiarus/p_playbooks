@@ -31,6 +31,21 @@ services:
       - /var/lib/flexget:/config
       - /mnt/Arquivos-midias:/downloads
 
+  netdata:
+    image: netdata/netdata
+    container_name: netdata
+    hostname: ubuntu-03
+    ports:
+      - 19999:19999
+    cap_add:
+      - SYS_PTRACE
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   heimdall:
     image: linuxserver/heimdall
     container_name: heimdall
@@ -144,22 +159,6 @@ services:
     volumes:
       - /var/lib/redis:/data
 
-  plex:
-    container_name: plex
-    image: linuxserver/plex
-    environment:
-      - TZ=America/Sao_Paulo
-      - PUID=1000
-      - PGID=1000
-    volumes:
-      - /plex:/config
-      - /mnt/storage/movies:/movies
-      - /mnt/storage/tv:/tvshows
-    labels:
-      - "traefik.enable=true"
-      - "traefik.port=32400"
-      - "traefik.frontend.rule=Host:plex.domain.com"
-
   traefik:
     container_name: traefik
     image: traefik:alpine
@@ -227,6 +226,31 @@ services:
     networks:
       - local
 
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: "a1b2c3d4"
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/data-research:/var/lib/postgresql/data
+    networks:
+      - postgres_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "retiarus@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "a1b2c3d4"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+    networks:
+      - postgres_network
+
 volumes:
   grafana-db:
     driver: local
@@ -239,3 +263,5 @@ networks:
   iot_grafana:
   jupyter_network:
   local:
+  postgres_network:
+    driver: bridge
