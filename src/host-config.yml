@@ -40,6 +40,11 @@
       - aptitude
       - cmake
       - autossh
+      - docker-compose
+      - docker
+      - docker.io
+      - python3-docker
+      - python-docker
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
@@ -193,6 +198,11 @@
       - libxkbcommon-x11-dev
       - libpython-dev
       - libpython3-dev
+    remotebox_p:
+      - libgtk2-perl
+      - libsoap-lite-perl
+      - freerdp-x11
+      - tigervnc-viewer
     target: terminal
     user: peregrinus
 
@@ -229,6 +239,9 @@
 
     - include_tasks: kitty.yml
       when: target == "kitty"
+
+    - include_tasks: remotebox.yml
+      when: target == "remotebox"
 
     - include_tasks: full-client.yml
       when: target == "full-client"
