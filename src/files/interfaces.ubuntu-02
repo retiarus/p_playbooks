@@ -1,0 +1,19 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+iface lo inet loopback
+
+allow-ovs-br0 enp2s0
+iface enp2s0 inet manual
+  ovs_bridge ovs-br0
+  ovs_type OVSPort
+
+auto ovs-br0
+allow-ovs ovs-br0
+iface ovs-br0 inet static
+  address 192.168.5.12
+  netmask 255.255.255.0
+  gateway 192.168.5.1
+  dns-nameservers 192.168.5.1
+  dns-search falco.net
+  ovs_type OVSBridge
+  ovs_ports enp2s0
