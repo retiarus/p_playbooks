@@ -1,6 +1,6 @@
 ---
 - name: config conda
-  hosts: "{{ vhost | default('localhost') }}"
+  hosts: all
   become: yes
   become_method: sudo
   become_user: root
@@ -12,6 +12,7 @@
       group:
         name: jupyterhub
         state: present
+        gid: 3000
 
     - name: create user jupyterhub
       user:
@@ -22,6 +23,7 @@
         generate_ssh_key: yes
         ssh_key_bits: 4096
         ssh_key_file: .ssh/id_rsa
+        uid: 3000
 
     - name: create empty file authorized_keys for jupyterhub
       file:
@@ -29,6 +31,8 @@
         owner: jupyterhub
         group: jupyterhub
         state: touch
+      become: yes
+      become_user: jupyterhub
 
         #    - name: define variable pubkey for jupyterhub
         #      command: cat /var/lib/jupyterhub/.ssh/id_rsa.pub
@@ -67,23 +71,6 @@
       become: yes
       become_user: jupyterhub
 
-    - name: create dir .conda
-      file:
-        path: /var/lib/jupyterhub/.conda/pkgs
-        state: directory
-        owner: jupyterhub
-        group: jupyterhub
-
-    - name: create some files
-      file:
-        path: "{{ item }}"
-        state: touch
-        owner: jupyterhub
-        group: jupyterhub
-      with_items:
-        - /var/lib/jupyterhub/.conda/pkgs/urls.txt
-        - /var/lib/jupyterhub/.conda/environments.txt
-
     - name: change permissions to jupyterhub directory
       file:
         path: /var/lib/jupyterhub
@@ -105,6 +92,8 @@
         jupyter \
         jupyterlab \
         flake8
+      args:
+        chdir: '/var/lib/jupyterhub'
       become: yes
       become_user: jupyterhub
 
@@ -114,6 +103,8 @@
         sudospawner \
         widgetsnbextension \
         ipympl
+      args:
+        chdir: '/var/lib/jupyterhub'
       become: yes
       become_user: jupyterhub
 
@@ -127,15 +118,18 @@
         - "jupyter-matplotlib"
         - "jupyterlab-spreadsheet"
         - "@ijmbarr/jupyterlab_spellchecker"
-        - "jupyterlab-flake8"
         - "jupyterlab_tensorboard"
         - "@jupyterlab/plotly-extension"
         - "@jupyterlab/toc"
+      args:
+        chdir: '/var/lib/jupyterhub'
 
     - name: update conda to remove problems with versions
       command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
       become: yes
       become_user: jupyterhub
+      args:
+        chdir: '/var/lib/jupyterhub'
 
     - name: update sudoers
       lineinfile:
@@ -209,5 +203,7 @@
 
     - name: create env dscience
       command: /var/lib/jupyterhub/anaconda/bin/conda env create -f /var/lib/jupyterhub/dscience_env.yml
+      args:
+        chdir: '/var/lib/jupyterhub'
       become: yes
       become_user: jupyterhub
