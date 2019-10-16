@@ -22,7 +22,7 @@
   become: yes
   become_user: "{{ user }}"
 
-- name: create ln
+- name: create link to kitty
   file:
     src: "/home/{{ user }}/kitty/kitty/launcher/kitty"
     dest: "/home/{{ user }}/bin/kitty"
