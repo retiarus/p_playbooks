@@ -1,0 +1,13 @@
+[Unit]
+Description=Pgadmin Container
+After=docker.service
+Wants=network-online.target docker.socket
+Requires=docker.socket
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a pgadmin
+ExecStop=/usr/bin/docker stop -t 10 pgadmin
+
+[Install]
+WantedBy=multi-user.target
