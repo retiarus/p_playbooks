@@ -1,0 +1,30 @@
+---
+- name: install remotebox packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ remotebox_p }}"
+
+- name: download remotebox
+  get_url:
+    url: "http://remotebox.knobgoblin.org.uk/downloads/RemoteBox-2.5.tar.bz2"
+    dest: "/tmp/RemoteBox-2.5.tar.bz2"
+    mode: "u=rwx,g=rwx,o=rx"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: extract remotebox to /home/{{ user }}/
+  unarchive:
+    src: "/tmp/RemoteBox-2.5.tar.bz2"
+    dest: "/home/{{ user }}/"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: create link to remotebox
+  file:
+    src: "/home/{{ user }}/RemoteBox-2.5/remotebox"
+    dest: "/home/{{ user }}/bin/remotebox"
+    state: link
+    owner: peregrinus
+    group: peregrinus
+...
