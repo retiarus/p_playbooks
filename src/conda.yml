@@ -201,6 +201,12 @@
         owner: jupyterhub
         group: jupyterhub
 
+    - name: start and enable service jupyterhub
+      systemd:
+        name: jupyterhub
+      enabled: yes
+      state: started
+
     - name: create env dscience
       command: /var/lib/jupyterhub/anaconda/bin/conda env create -f /var/lib/jupyterhub/dscience_env.yml
       args:
