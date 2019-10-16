@@ -1,0 +1,26 @@
+---
+- name: config and initialize ovs service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create bridge ovs-br0
+      openvswitch_bridge:
+        bridge: ovs-br0
+        state: present
+
+    - name: add interface to bridge
+      openvswitch_port:
+        bridge: ovs-br0
+        port: enp2s0
+        state: present
+
+    - name: copy interfaces config
+      copy:
+        src: interfaces.ubuntu-02
+        dest: /etc/network/interfaces
+      when: ansible_facts['hostname'] == 'ubuntu-02'
+
+
+        #    - name: create bond and add to bridge
+        #      command: "ovs-vsctl add-bond ovs-br0 bond0 enp2s0 lacp=active"
