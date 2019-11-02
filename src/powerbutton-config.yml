@@ -1,0 +1,19 @@
+---
+- name: config powerbutton
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: copy script file
+      copy:
+        src: "./files/powerbtn-acpi-support.sh"
+        dest: /etc/acpi/powerbtn-acpi-support.sh
+        owner: root
+        group: root
+
+    - name: copy event file
+      copy:
+        src: "./files/powerbtn-acpi-support"
+        dest: /etc/acpi/events/powerbtn-acpi-support
+        owner: root
+        group: root
