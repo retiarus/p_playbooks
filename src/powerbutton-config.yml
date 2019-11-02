@@ -17,3 +17,9 @@
         dest: /etc/acpi/events/powerbtn-acpi-support
         owner: root
         group: root
+
+    - name: restart service
+      systemd:
+        name: acpid
+        state: restarted
+        daemon_reload: yes
