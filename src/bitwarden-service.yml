@@ -15,29 +15,29 @@
          name: bitwarden
          group: bitwarden
          shell: /bin/false
-         home: /var/lib/bitwarden/data
+         home: /mnt/docker-data/bitwarden
          uid: 1030
 
     - name: create /var/lib/bitwarden/certs
       file:
-        path: /var/lib/bitwarden
+        path: /mnt/docker-data/bitwarden/data
         state: directory
         owner: bitwarden
         group: bitwarden
 
     - name: create /etc/bitwarden/certs
       file:
-        path: /etc/bitwarden
+        path: /mnt/docker-data/bitwarden/certs
         state: directory
         owner: bitwarden
         group: bitwarden
 
     - name: generate CA key pair
       openssl_privatekey:
-        path: "/etc/certs/bitwarden_ca.key"
+        path: /mnt/docker-data/bitwarden/certs/bitwarden_ca.key
         passphrase:
         cipher: aes256
-        size: 2056
+        size: 4096
 
         #    - name: create ca certificate request
         #      openssl_csr:
