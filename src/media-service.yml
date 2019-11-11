@@ -1,0 +1,143 @@
+---
+- name: config and initialize media-service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create group deluge
+      group:
+        name: deluge
+        state: present
+        gid: 2000
+
+    - name: create user deluge
+      user:
+         name: deluge
+         group: deluge
+         shell: /bin/false
+         home: /var/lib/deluge/
+         uid: 2000
+
+    - name: create group flexget
+      group:
+        name: flexget
+        state: present
+        gid: 2001
+
+    - name: create user flexget
+      user:
+         name: flexget
+         group: flexget
+         shell: /bin/false
+         home: /var/lib/flexget
+         uid: 2001
+
+    - name: create dir downloads
+      file:
+        path: /mnt/downloads/
+        state: directory
+        owner: deluge
+        group: users
+
+    - name: add user flexget to group deluge
+      user:
+         name: flexget
+         groups: deluge
+         append: yes
+
+    - name: add user deluge to group flexget
+      user:
+         name: deluge
+         groups: flexget
+         append: yes
+
+    - name: copy config files
+      copy:
+        src: "{{ item }}"
+        dest: /var/lib/deluge/
+        owner: deluge
+        group: deluge
+      with_fileglob:
+        - ./files/deluge/*
+
+    - name: copy config files
+      copy:
+        src: config.yml
+        dest: /var/lib/flexget/
+        owner: flexget
+        group: flexget
+
+    - name: create log directorys
+      file:
+        name: /var/log/{{ item }}
+        state: directory
+      loop:
+        - deluge
+        - flexget
+
+    - name: create log files for deluge
+      file:
+        name: "{{ item }}"
+        state: touch
+        owner: deluge
+        group: deluge
+      loop:
+        - /var/log/deluge/deluged.log
+        - /var/log/deluge/web.log
+        - /var/log/flexget/flexget.log
+
+    - name: create log files for flexget
+      file:
+        name: /var/log/flexget/flexget.log
+        state: touch
+        owner: flexget
+        group: flexget
+
+    - name: install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python-pip
+        - python3-pip
+        - virtualenv
+
+    - name: install deluge
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - deluge-common
+        - deluge-console
+        - deluged
+        - deluge-web
+
+    - name: configure virtualenv and install flexget
+      pip:
+        name: flexget
+        virtualenv: /var/lib/flexget/
+        virtualenv_python: python3.7
+
+    - name: install deluge-client for flexget
+      pip:
+        name: deluge-client
+        virtualenv: /var/lib/flexget/
+
+    - name: copy services files to systemd/system
+      copy:
+        src: ./files/media-service/{{ item }}
+        dest: /etc/systemd/system/{{ item }}
+      loop:
+        - deluged.service
+        - deluge-web.service
+        - flexget.service
+
+    - name: enable services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - deluged
+        - deluge-web
+        - flexget

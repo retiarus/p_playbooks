@@ -1,0 +1,18 @@
+[Unit]
+Description=Flexget Daemon
+After=network.target
+
+[Service]
+Type=simple
+User=flexget
+Group=flexget
+UMask=000
+VIRTUAL_ENV=/var/lib/flexget
+Environment=PATH=$VIRTUAL_ENV/bin:$PATH
+WorkingDirectory=/var/lib/flexget
+ExecStart=/var/lib/flexget/bin/flexget --logfile /var/log/flexget/flexget.log --loglevel verbose -c config.yml daemon start
+ExecStop=/var/lib/flexget/bin/flexget daemon stop
+ExecReload=/var/lib/flexget/bin/flexget daemon reload
+
+[Install]
+WantedBy=multi-user.target
