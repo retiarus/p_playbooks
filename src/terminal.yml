@@ -120,18 +120,23 @@
     - "192.168.5.13  ubuntu-03        ubuntu-03.falco.net"
     - "192.168.5.3   falco03          falco03.falco.net"
     - "192.168.5.4   falco04          falco04.falco.net"
+    - "192.168.5.5   falco05          falco05.falco.net"
     - "192.168.5.6   falco06          falco06.falco.net"
     - "192.168.5.251 cubietruck       cubietruck.falco.net"
-    - "192.168.5.254 OPNsense         OPNsense.falco.net"
+    - "192.168.5.252 boot-service     boot-service.falco.net"
+    - "192.168.5.253 media-service    media-service.falco.net"
+    - "192.168.5.254 pve              pve.falco.net"
+    - "192.168.5.1   OPNsense         OPNsense.falco.net"
 
 - name: add entrys to fstab file
   lineinfile:
     path: "/etc/fstab"
     line: "{{ item }}"
-  when: ansible_facts['hostname'] != 'ubuntu-02'
+  when: ansible_facts['hostname'] != 'pve'
   loop:
-    - "ubuntu-02.falco.net:experimentos     /home/{{ user }}/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-02.falco.net:arquivos         /home/{{ user }}/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-02.falco.net:experimentos     /mnt/experimentos                 nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "ubuntu-02.falco.net:arquivos         /mnt/arquivos                     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:experimentos     /home/{{ user }}/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:arquivos         /home/{{ user }}/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:downloads         /home/{{ user }}/Downloads       nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:filmes           /mnt/filmes                       nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:iso              /mnt/iso                          nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
 ...
