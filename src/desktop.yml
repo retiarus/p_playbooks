@@ -21,6 +21,16 @@
     repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
     state: present
 
+- name: add Vivaldi browser key
+  apt_key:
+    url: http://repo.vivaldi.com/stable/linux_signing_key.pub
+    state: present
+
+- name: add Vivaldi repository
+  apt_repository:
+    repo: "deb [arch=i386,amd64] http://repo.vivaldi.com/stable/deb/ stable main"
+    state: present
+
 - name: update repositorys
   apt:
     update_cache: yes
@@ -42,6 +52,11 @@
     - "redhat.vscode-yaml"
     - "tomphilbin.gruvbox-themes"
   become_user: peregrinus
+
+- name: install Vivaldi browser
+  apt:
+    name: vivaldi
+    state: present
 
 - include_tasks: kitty.yml
 ...
