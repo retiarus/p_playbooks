@@ -1,0 +1,60 @@
+---
+- name: config synergy service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create synergy group
+      group:
+        name: synergy
+        state: present
+        gid: 900
+
+    - name: create user synergy
+      user:
+        name: synergy
+        group: synergy
+        shell: /bin/false
+        home: /var/lib/synergy
+        uid: 900
+        generate_ssh_key: yes
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa
+
+    - name: create authorized_keys
+      file:
+        path: "/var/lib/synergy/.ssh/authorized_keys"
+        state: touch
+      when: ansible_facts['hostname'] == 'ubuntu-02'
+
+    - name: fetch pubkeys from remote users
+      fetch:
+         dest: "/tmp/pubkey/{{ inventory_hostname }}.pub"
+         src: "/var/lib/synergy/.ssh/id_rsa.pub"
+         flat: yes
+      register: remote_pubkeys
+      when: ansible_facts['hostname'] != 'ubuntu-02'
+
+    - name: add pubkeys to master server
+      authorized_key:
+        user: synergy
+        key: "{{ lookup('file', item) }}"
+      with_fileglob:
+        - /tmp/pubkey/*
+      when: ansible_facts['hostname'] == 'ubuntu-02'
+
+    - name: remove temp local pubkey copies
+      local_action: file dest="/tmp/pubkey" state=absent
+
+    - name: copy systemd file for synergy
+      copy:
+        src: ./files/system/synergy-secure-tunnel.service
+        dest: /etc/systemd/system
+      when: ansible_facts['hostname'] != 'ubuntu-02'
+
+    - name: start and activate systemd service synergy-secure-tunnel
+      systemd:
+        name: synergy-secure-tunnel
+        state: started
+        enabled: yes
+      when: ansible_facts['hostname'] != 'ubuntu-02'
