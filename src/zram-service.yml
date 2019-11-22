@@ -1,0 +1,51 @@
+---
+- name: config and install zram
+  hosts: all
+  become: yes
+  vars:
+    user: peregrinus
+
+  tasks:
+    - name: clone zram-utils
+      git:
+        repo: 'https://github.com/Abuseware/zram-utils'
+        dest: '/home/{{ user }}/experimentos/zram-utils'
+        clone: yes
+        recursive: yes
+        force: yes
+      become_user: "{{ user }}"
+
+    - name: copy modprobe.d/zram.conf
+      template:
+        src: ./files/zram.j2
+        dest: /etc/modprobe.d/zram.conf
+        owner: root
+        group: root
+
+    - name: copy zswap.sh to /usb/sbin
+      copy:
+        src: '/home/{{ user }}/experimentos/zram-utils/zswap.sh'
+        dest: '/usr/sbin/zswap.sh'
+        owner: root
+        group: root
+        mode: u=rwx,g=rx,o=rx
+
+    - name: add the zram module
+      modprobe:
+        name: zram
+        state: present
+        params: 'num_devices={{ ansible_processor_cores }}'
+
+    - name: copy zswap.service
+      copy:
+        src: '/home/{{ user }}/experimentos/zram-utils/zswap@.service'
+        dest: '/etc/systemd/system/zswap@.service'
+        owner: root
+        group: root
+
+    - name: start zswap@.service
+      systemd:
+        name: zswap@zram{{ item }}
+        state: started
+        enabled: yes
+      loop: "{{ range(0, ansible_processor_cores) | list }}"
