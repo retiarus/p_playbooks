@@ -1,0 +1,22 @@
+---
+- name: hardened configuration
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: add restrictions
+      lineinfile:
+        path: "/etc/sysctl.conf"
+        line: "{{ item }}"
+      loop:
+        - "kernel.dmesg_restrict = 1"
+        - "fs.protected_regular = 1"
+        - "fs.protected_fifos = 1"
+        - "fs.protected_hardlinks = 1"
+        - "fs.protected_symlinks"
+        - "kernel.perf_events_paranoid = 3"
+        - "kernel.kptr_restrict = 1"
+        - "kernel.kexec_load_disable = 1"
+        - "kernel.yama.ptrace_scopce = 1"
+        - "kernel.unprevileged_bpf_disabled = 1"
+        - "net.core.bpf_jit_harden = 2"
