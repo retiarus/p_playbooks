@@ -46,6 +46,9 @@
       - python3-docker
       - python-docker
       - pylama
+      - glances
+      - htop
+      - nmon
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
