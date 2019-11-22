@@ -7,8 +7,8 @@ templates:
       port: 58846
       username: peregrinus
       password: a1b2c3d4
-      path: /downloads
-    download: /downloads
+      path: /mnt/downloads
+    download: /mnt/downloads
     quality: webdl|hdtv <720p xvid|divx|h264|h265
     series:
       - the defenders
@@ -61,6 +61,11 @@ templates:
       - chilling adventures of sabrina
       - counterpart
       - young justice
+      - see
+      - his dark materials
+      - batwoman
+      - titans
+      - watchmen
 
 tasks:
   task-series:
