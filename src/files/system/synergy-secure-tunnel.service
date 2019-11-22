@@ -1,0 +1,15 @@
+[Unit]
+Description=Setup a secure tunnel to %I
+After=network.target
+
+[Service]
+User=synergy
+Group=synergy
+ExecStart=/usr/bin/ssh -NT -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes -l synergy ubuntu-02 -L 24800:localhost:24800
+
+# Restart every >2 seconds to avoid StartLimitInterval failure
+RestartSec=5
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
