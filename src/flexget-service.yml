@@ -1,6 +1,6 @@
 ---
-- name: create symlinks
-  hosts: localhost
+- name: config and initialize flexget service
+  hosts: all
   become: yes
   
   tasks:
