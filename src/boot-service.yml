@@ -1,0 +1,141 @@
+---
+- name: config boot-service
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: install dnsmasq and lighttpd
+    apt:
+      name: "{{ item }}"
+      state: present
+    loop:
+      #      - dnsmasq
+      - tftpd-hpa
+      - lighttpd
+
+  - name: copy tftpd-hpa
+    copy:
+      src: ./files/boot/tftpd-hpa
+      dest: /etc/default/tftpd-hpa
+      owner: root
+      group: root
+
+        #  - name: copy dnsmasq.conf
+        #    copy:
+        #      src: ./files/boot/dnsmasq.conf
+        #      dest: /etc/dnsmasq.conf
+        #      owner: root
+        #      group: root
+
+      #  - name: create log file for dnsmasq.conf
+      #    file:
+      #      path: /var/log/dnsmasq.log
+      #      owner: root
+      #      group: root
+      #      state: touch
+
+  - name: copy lighttpd.conf
+    copy:
+      src: ./files/boot/lighttpd.conf
+      dest: /etc/lighttpd/lighttpd.conf
+      owner: root
+      group: root
+
+      #  - name: copy exports
+      #    copy:
+      #      src: ./files/exports
+      #      dest: /etc/exports
+      #      owner: root
+      #      group: root
+
+  - name: create directories
+    file:
+      path: "{{ item }}"
+      owner: root
+      group: root
+      state: directory
+    loop:
+      #      - /nfs
+      #      - /nfs/gentoo
+      #      - /nfs/ubuntu
+      #      - /nfs/partimag
+      #      - /mnt/windows
+      - /var/www/htdocs
+      - /var/www/htdocs/clonezilla
+      - /var/www/htdocs/clonezilla/clonezilla-amd64
+      - /var/www/htdocs/gparted
+      - /var/www/htdocs/gparted/gparted-amd64
+      - /var/www/htdocs/gparted/gparted-i686
+
+  - name: create directories to tftpboot
+    file:
+      path: "/tftpboot/{{ item.path }}"
+      state: directory
+      mode: '{{ item.mode }}'
+      owner: root
+      group: root
+    with_filetree:
+    - "./files/boot/tftpboot/"
+    when: item.state == 'directory'
+    loop_control:
+      label: "{{ item.path }}"
+
+  - name: Copy files
+    copy:
+      src: "{{ item.src }}"
+      dest: "/tftpboot/{{ item.path }}"
+      mode: "{{ item.mode }}"
+      owner: root
+      group: root
+    with_filetree:
+      - "./files/boot/tftpboot/"
+    when: item.state == 'file'
+    loop_control:
+      label: "{{ item.path }}"
+
+      #  - name: add mount points to fstab
+      #    lineinfile:
+      #      path: "/etc/fstab"
+      #      line: "{{ item }}"
+      #    loop:
+      #      - "UUID=2079856a-bb1f-46e8-b7a6-8fe32014f4c6  /tftpboot/images                  btrfs   noatime,compress=lzo,space_cache,autodefrag,subvol=images   0 1"
+      #      - "UUID=2079856a-bb1f-46e8-b7a6-8fe32014f4c6  /mnt/windows                      btrfs   noatime,compress=lzo,space_cache,autodefrag,subvol=windows  0 1"
+
+  - name: create links clonezilla
+    file:
+      src: /tftpboot/images/clonezilla/clonezilla-amd64/live/filesystem.squashfs
+      dest: /var/www/htdocs/clonezilla/clonezilla-amd64/filesystem.squashfs
+      state: link
+      force: yes
+
+  - name: create links gparted-amd64
+    file:
+      src: /tftpboot/images/gparted/gparted-amd64/live/filesystem.squashfs
+      dest: /var/www/htdocs/gparted/gparted-amd64/filesystem.squashfs
+      state: link
+      force: yes
+
+  - name: create links gparted-i686
+    file:
+      src: /tftpboot/images/gparted/gparted-i686/live/filesystem.squashfs
+      dest: /var/www/htdocs/gparted/gparted-i686/filesystem.squashfs
+      state: link
+      force: yes
+
+      #  - name: enable service dnsmasq
+      #    systemd:
+      #      name: dnsmasq
+      #      state: started
+      #      enabled: yes
+
+  - name: enable service tftpd-hpa
+    systemd:
+      name: tftpd-hpa
+      state: started
+      enabled: yes
+
+  - name: start service lighttpd
+    systemd:
+      name: lighttpd
+      state: started
+      enabled: yes
