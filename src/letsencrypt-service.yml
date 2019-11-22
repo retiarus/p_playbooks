@@ -1,0 +1,27 @@
+
+---
+- name: config and initialize letsencrypt service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create group letsencrypt
+      group:
+        name: heimdall
+        state: present
+        gid: 2050
+
+    - name: create user letsencrypt
+      user:
+         name: heimdall
+         group: heimdall
+         shell: /bin/false
+         home: /mnt/docker-data/letsencrypt
+         uid: 2050
+
+    - name: create dir config for letsencrypt
+      file:
+        name: /mnt/docker-data/letsencrypt/config
+        state: directory
+        owner: letsencrypt
+        group: letsencrypt
