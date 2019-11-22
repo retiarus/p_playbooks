@@ -1,0 +1,53 @@
+---
+- name: config and install openhantek
+  hosts: falco03
+  become: yes
+  vars:
+    user: peregrinus
+
+  tasks:
+    - name: install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - make
+        - cmake
+        - qttools5-dev
+        - qttools5-dev-tools
+        - libfftw3-dev
+        - binutils-dev
+        - libusb-1.0-0-dev
+        - libqt5opengl5-dev
+        - mesa-common-dev
+        - libgl1-mesa-dev
+        - libgles2-mesa-dev
+
+    - name: clone openhanetk6022
+      git:
+        repo: 'https://github.com/OpenHantek/OpenHantek6022'
+        dest: '/home/{{ user }}/experimentos/OpenHantek6022'
+        clone: yes
+        update: yes
+        recursive: yes
+        force: yes
+      become_user: "{{ user }}"
+
+    - name: create dir build
+      file:
+        path: '/home/{{ user }}/experimentos/OpenHantek6022/build'
+        owner: "{{ user }}"
+        group: "{{ user }}"
+        state: directory
+
+    - name: run make
+      command: "cmake ..; make -j2"
+      args:
+        chdir: "/home/{{ user }}/experimentos/OpenHantek6022/build"
+      become: yes
+      become_user: "{{ user }}"
+
+    - name: run make
+      command: "make install"
+      args:
+        chdir: "/home/{{ user }}/experimentos/OpenHantek6022/build"
