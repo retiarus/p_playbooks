@@ -4,6 +4,10 @@
   become: yes
 
   tasks:
+    - name: load variables
+      include_vars:
+        file: secrets.yml
+    
     - name: create group bitwarden
       group:
         name: bitwarden
@@ -32,38 +36,63 @@
         owner: bitwarden
         group: bitwarden
 
+    - name: install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - python3-openssl
+        - python-openssl
+
     - name: generate CA key pair
       openssl_privatekey:
-        path: /mnt/docker-data/bitwarden/certs/bitwarden_ca.key
-        passphrase:
+        path: /mnt/docker-data/bitwarden/certs/private-ca.key
+        passphrase: "{{ private_key_password }}"
         cipher: aes256
         size: 4096
+    
+    - name: create ca certificate request
+      openssl_csr:
+        path: /mnt/docker-data/bitwarden/certs/ca-request.csr
+        privatekey_path: /mnt/docker-data/bitwarden/certs/private-ca.key
+        privatekey_passphrase: "{{ private_key_password }}"
+        country_name: BR
+        organization_name: falco.net
+        email_address: peregrinus@falco.net
+        common_name: falco.net
+        digest: sha512
+    
+    - name: generate a selfsigned certificate (root CA)
+      openssl_certificate:
+        path: /mnt/docker-data/bitwarden/certs/selfsigned-ca-cert.crt
+        privatekey_path: /mnt/docker-data/bitwarden/certs/private-ca.key
+        csr_path: /mnt/docker-data/bitwarden/certs/ca-request.csr
+        privatekey_passphrase: "{{ private_key_password }}"
+        provider: selfsigned
+    
+    - name: generate bitwarden private key
+      openssl_privatekey:
+        path: /mnt/docker-data/bitwarden/certs/bitwarden.key
+        passphrase: "{{ private_key_password }}"
+        cipher: aes256
+        size: 4096
+    
+    - name: create ca certificate request for bitwarden
+      openssl_csr:
+        path: /mnt/docker-data/bitwarden/certs/bitwarden.csr
+        privatekey_path: /mnt/docker-data/bitwarden/certs/bitwarden.key
+        privatekey_passphrase: "{{ private_key_password }}"
+        country_name: BR
+        organization_name: falco.net
+        email_address: peregrinus@falco.net
+        common_name: falco.net
+        digest: sha512
 
-        #    - name: create ca certificate request
-        #      openssl_csr:
-        #        path: "/var/lib/bitwarden/certs/bitwarden_ca.csr"
-        #        privatekey_path: "/var/lib/bitwarden/certs/bitwarden_ca.key"
-        #        privatekey_passphrase: "{{ pass }}"
-        #        common_name: bitwarden
-        #
-        #    - name: Generate a Self Signed OpenSSL certificate
-        #      openssl_certificate:
-        #      path: "/var/lib/bitwarden/certs/mqtt_ca.crt"
-        #      privatekey_path: "/var/lib/bitwarden/certs/bitwarden_ca.key"
-        #      csr_path: "/var/lib/bitwarden/certs/bitwarden_ca.csr"
-        #      provider: selfsigned
-      #
-        #    - name: generate bitwarden broker key pair
-        #      openssl_privatekey:
-        #        path: "/var/lib/bitwarden/certs/mqtt_srv.key"
-        #        passphrase: ansible
-        #        cipher: aes256
-        #        size: 2056
-        #
-        #    - name: create a certificate request from ca
-        #      openssl_csr:
-        #        path: "/var/lib/bitwarden/certs/mqtt_srv.csr"
-        #        privatekey_path: "/var/lib/bitwarden/certs/mqtt_srv.key"
-        #        privatekey_passphrase: ansible
-        #        common_name: pi-router
-        #
+    - name: generate bitwarden certificate signed by root CA 
+      openssl_certificate:
+        path: /mnt/docker-data/bitwarden/certs/bitwarden.crt
+        csr_path: /mnt/docker-data/bitwarden/certs/bitwarden.csr
+        ownca_path: /mnt/docker-data/bitwarden/certs/selfsigned-ca-cert.crt
+        ownca_privatekey_path: /mnt/docker-data/bitwarden/certs/private-ca.key
+        ownca_privatekey_passphrase: "{{ private_key_password }}"
+        provider: ownca
