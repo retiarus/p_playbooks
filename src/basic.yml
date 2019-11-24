@@ -5,15 +5,28 @@
     state: present
   loop: "{{ basic_p }}"
 
-- name: enable service syslog-ng
+- name: copy config file for openntpd
+  copy:
+    src: ./files/openntpd/ntpd.conf
+    dest: /etc/openntpd/ntpd.conf
+
+- name: copy apparmor permissions
+  copy:
+    src: ./files/openntpd/usr.sbin.ntpd
+    dest: /etc/apparmor.d/usr.sbin.ntpd
+
+- name: enable and start service syslog-ng
   systemd:
     name: syslog-ng
     enabled: yes
-
-- name: start service syslog-ng
-  systemd:
-    name: syslog-ng
     state: started
+
+- name: enable and start service openntpd
+  systemd:
+    name: openntpd
+    enabled: yes
+    state: started
+
 
 - name: copy auto.sshfs
   copy:

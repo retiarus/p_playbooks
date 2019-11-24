@@ -1,0 +1,24 @@
+# vim:syntax=apparmor
+#include <tunables/global>
+
+/usr/sbin/ntpd {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/user-tmp>
+
+  # conf
+  /etc/openntpd/ntpd.conf r,
+
+  # capabilities
+  capability kill,
+  capability sys_chroot,
+  capability setgid,
+  capability setuid,
+  capability sys_time,
+  capability sys_nice,
+
+  /usr/sbin/ntpd mrix,
+  /var/lib/openntpd/db/ntpd.drift rw,
+  /var/lib/openntpd/run/ntpd.sock rw,
+
+}
