@@ -41,7 +41,7 @@
     name: "{{ item }}"
     executable: pip3
     extra_args: --user
-  with_items:
+  loop:
     - pipenv
     - virtualenvwrapper
   become: yes
@@ -53,7 +53,7 @@
     name: "{{ item }}"
     executable: pip
     extra_args: --user
-  with_items:
+  loop:
     - pipenv
     - virtualenvwrapper
   become: yes
@@ -187,5 +187,5 @@
     dest: /usr/local/share/ca-certificates/extra/selfsigned-ca-cert.crt
 
 - name: update list of certificates
-  commad: update-ca-certificates
+  command: update-ca-certificates
 ...
