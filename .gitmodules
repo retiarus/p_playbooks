@@ -7,3 +7,6 @@
 [submodule "src/ansible-openwrt"]
 	path = src/ansible-openwrt
 	url = https://github.com/gekmihesg/ansible-openwrt
+[submodule "src/ansible-modules-bitwarden"]
+	path = src/ansible-modules-bitwarden
+	url = https://github.com/larsks/ansible-modules-bitwarden
