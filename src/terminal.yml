@@ -173,4 +173,19 @@
     - "pve.falco.net:imagens                /mnt/imagens                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "pve.falco.net:musicas                /mnt/musicas                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "pve.falco.net:download-media-service /mnt/downloads-deluge             nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+
+- name: create /usr/local/share/ca-certificates/extra
+  file:
+    name: /usr/local/share/ca-certificates/extra
+    state: directory
+    owner: root
+    group: root
+
+- name: copy certificate to /usr/local/share/ca-certificates/extra
+  copy:
+    src: ./files/selfsigned-ca-cert.crt
+    dest: /usr/local/share/ca-certificates/extra/selfsigned-ca-cert.crt
+
+- name: update list of certificates
+  commad: update-ca-certificates
 ...
