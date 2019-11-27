@@ -4,6 +4,44 @@
   become: yes
 
   tasks:
+    - name: install packages to hardened
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - unattended-upgrades
+        - fail2ban
+        - needrestart
+        - python3-pyinotify
+        - python3-systemd
+        - rkhunter
+        - chkrootkit
+        - apt-listchanges
+        - libpam-tmpdir
+        - apt-show-versions
+
+    - name: add configuration to unattended-upgrades
+      lineinfile:
+        path: "/etc/apt/apt.conf.d/20auto-upgrades"
+        line: "APT::Periodic::Unattended-Upgrade \"1\";"
+
+    - name: add configuration to unattended-upgrades
+      lineinfile:
+        path: "/etc/needrestart/needrestart.conf"
+        line: "$nrconf{restart} = 'a';"
+
+    - name: config sshd
+      copy:
+        src: ./files/ssh/sshd_config
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+
+    - name: restart sshd
+      systemd:
+        name: ssh
+        state: restarted
+
     - name: add restrictions
       lineinfile:
         path: "/etc/sysctl.conf"
@@ -15,8 +53,41 @@
         - "fs.protected_hardlinks = 1"
         - "fs.protected_symlinks"
         - "kernel.perf_events_paranoid = 3"
-        - "kernel.kptr_restrict = 1"
+        - "kernel.kptr_restrict = 2"
         - "kernel.kexec_load_disable = 1"
         - "kernel.yama.ptrace_scopce = 1"
         - "kernel.unprevileged_bpf_disabled = 1"
         - "net.core.bpf_jit_harden = 2"
+        - "net.ipv4.conf.all.log_martians = 1"
+        - "net.ipv4.conf.default.log_martians = 1"
+        - "kernel.sysrq = 0"
+        - "fs.suid_dumpable = 0"
+        - "kernel.core_uses_pid = 1"
+
+    - name: copy fail2ban local.conf
+      copy:
+        src: ./files/fail2ban/fail2ban.d/local.conf
+        dest: /etc/fail2ban/fail2ban.d/local.conf
+        owner: root
+        group: root
+
+    - name: start services
+      systemd:
+        name: "{{ item }}"
+        state: started
+        enabled: yes
+      loop:
+        - unattended-upgrades
+
+    - name: config nftables
+      copy:
+        src: ./files/nftables/nftables.conf
+        dest: /etc/nftables.conf
+        owner: root
+        group: root
+
+    - name: start nftables service
+      systemd:
+        name: nftables
+        state: restarted
+        enabled: yes
