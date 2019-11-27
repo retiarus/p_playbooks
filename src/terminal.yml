@@ -72,6 +72,40 @@
     group: "{{ user }}"
     append: yes
 
+- name: create group deluge
+  group:
+    name: deluge
+    state: present
+    gid: 2000
+
+- name: create user deluge
+  user:
+     name: deluge
+     group: deluge
+     shell: /bin/false
+     home: /var/lib/deluge/
+     uid: 2000
+
+- name: create group flexget
+  group:
+    name: flexget
+    state: present
+    gid: 2001
+
+- name: create user flexget
+  user:
+     name: flexget
+     group: flexget
+     shell: /bin/false
+     home: /var/lib/flexget
+     uid: 2001
+
+- name: add user {{ user }} to deluge
+  user:
+    name: "{{ user }}"
+    groups: deluge, users
+    append: yes
+
 - name: clone p_dotfiles
   git:
     repo: 'https://github.com/retiarus/p_dotfiles'
@@ -98,16 +132,13 @@
     - '/mnt/filmes'
     - '/mnt/imagens'
     - '/mnt/arquivos'
-    - '/mnt/organizar'
     - '/mnt/downloads'
     - '/mnt/experimentos'
-    - '/mnt/downloads-flexget'
+    - '/mnt/downloads-deluge'
     - '/mnt/mpiuser'
     - '/mnt/ubuntu-01/home'
     - '/mnt/ubuntu-02/home'
     - '/mnt/ubuntu-03/home'
-    - '/mnt/ubuntu-server-02:raid_falco'
-    - '/mnt/home_falco'
   ignore_errors: yes
 
 - name: add hosts to host file
@@ -134,9 +165,12 @@
     line: "{{ item }}"
   when: ansible_facts['hostname'] != 'pve'
   loop:
-    - "pve.falco.net:experimentos     /home/{{ user }}/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "pve.falco.net:arquivos         /home/{{ user }}/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "pve.falco.net:downloads         /home/{{ user }}/Downloads       nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "pve.falco.net:filmes           /mnt/filmes                       nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "pve.falco.net:iso              /mnt/iso                          nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:experimentos           /home/{{ user }}/experimentos     nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:arquivos               /home/{{ user }}/arquivos         nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:downloads              /home/{{ user }}/Downloads        nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:filmes                 /mnt/filmes                       nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:iso                    /mnt/iso                          nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:imagens                /mnt/imagens                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:musicas                /mnt/musicas                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:download-media-service /mnt/downloads-deluge             nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
 ...
