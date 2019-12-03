@@ -1,12 +1,13 @@
 ---
 - name: Host Config
   hosts: "{{ vhost | default('all') }}"
+  roles:
+    - ansible-modules-bitwarden
   become: yes
   become_user: root
   vars:
     basic_p:
       - syslog-ng
-      - openntpd
       - autofs
       - sshfs
     terminal_p:
@@ -125,6 +126,7 @@
       - libvirt-bin
       - libvirglrenderer-dev
       - libvirglrenderer0
+      - ovmf
     latex_p:
       - texlive-latex-base
       - texlive-latex-base-doc
