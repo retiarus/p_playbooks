@@ -10,6 +10,7 @@
       - syslog-ng
       - autofs
       - sshfs
+      - ntp
     terminal_p:
       - openssh-server
       - openssh-client

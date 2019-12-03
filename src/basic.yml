@@ -5,6 +5,11 @@
     state: present
   loop: "{{ basic_p }}"
 
+- name: copy config file for ntpd
+  copy:
+    src: ./files/ntpd/ntp.conf
+    dest: /etc/ntp.conf
+
   #- name: copy config file for openntpd
   #  copy:
   #    src: ./files/openntpd/ntpd.conf
@@ -21,11 +26,11 @@
     enabled: yes
     state: started
 
-    # - name: enable and start service openntpd
-    #   systemd:
-    #     name: openntpd
-    #     enabled: yes
-    #     state: started
+- name: enable and start service ntpd
+  systemd:
+    name: ntp
+    enabled: yes
+    state: restarted
 
 - name: copy auto.sshfs
   copy:
