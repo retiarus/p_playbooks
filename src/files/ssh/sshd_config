@@ -14,6 +14,11 @@ ClientAliveInterval 300
 Compression no
 MaxSessions 5
 AllowAgentForwarding no
+
 Match User peregrinus
   X11Forwarding yes
   PasswordAuthentication yes
+
+Match User synergy
+  X11Forwarding yes
+  AllowTcpForwarding yes
