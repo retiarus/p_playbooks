@@ -23,6 +23,7 @@
   ignore_errors: True
 
 - include_tasks: neovim.yml
+  ignore_errors: True
 
 - name: set default shell to zsh
   user:
@@ -41,10 +42,11 @@
     name: "{{ item }}"
     executable: pip3
     extra_args: --user
+  state: latest
   loop:
     - pipenv
     - virtualenvwrapper
-  become: yes
+    - pynvim
   become_user: "{{ user }}"
   ignore_errors: yes
 
@@ -53,10 +55,11 @@
     name: "{{ item }}"
     executable: pip
     extra_args: --user
+  state: latest
   loop:
     - pipenv
     - virtualenvwrapper
-  become: yes
+    - pynvim
   become_user: "{{ user }}"
   ignore_errors: yes
 
