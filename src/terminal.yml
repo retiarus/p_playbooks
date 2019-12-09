@@ -119,13 +119,14 @@
     force: yes
   become_user: "{{ user }}"
 
-- name: crete dir's to home in mnt
+- name: crete dir's
   file:
     path: "{{ item }}"
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"
   with_items:
+    - '/home/{{ user }}/bin'
     - '/home/{{ user }}/arquivos'
     - '/home/{{ user }}/experimentos'
     - '/mnt/falco03'
@@ -133,6 +134,7 @@
     - '/mnt/iso'
     - '/mnt/animes'
     - '/mnt/filmes'
+    - '/mnt/musicas'
     - '/mnt/imagens'
     - '/mnt/arquivos'
     - '/mnt/downloads'
@@ -174,7 +176,7 @@
     - "pve.falco.net:filmes                 /mnt/filmes                       nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "pve.falco.net:iso                    /mnt/iso                          nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "pve.falco.net:imagens                /mnt/imagens                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
-    - "pve.falco.net:musicas                /mnt/musicas                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
+    - "pve.falco.net:musica                 /mnt/musicas                      nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
     - "pve.falco.net:download-media-service /mnt/downloads-deluge             nfs noatime,noacl,nocto,wsize=32768,rsize=32768           0 0"
 
 - name: create /usr/local/share/ca-certificates/extra
