@@ -1,0 +1,63 @@
+---
+- name: config and install sigrok
+  hosts: all
+  become: yes
+  vars:
+    user: peregrinus
+
+  tasks:
+    - name: install dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - git-core
+        - gcc
+        - g++
+        - make
+        - autoconf
+        - autoconf-archive
+        - automake
+        - libtool
+        - pkg-config
+        - libglib2.0-dev
+        - libglibmm-2.4-dev
+        - libzip-dev
+        - libusb-1.0-0-dev
+        - libftdi1-dev
+        - check
+        - doxygen
+        - python-numpy
+        - python-dev
+        - python-gi-dev
+        - python-setuptools
+        - swig
+        - default-jdk
+        - python3-dev
+        - cmake
+        - libboost-test-dev
+        - libboost-serialization-dev
+        - libboost-filesystem-dev
+        - libboost-system-dev
+        - libqt5svg5-dev
+        - qtbase5-dev
+        - libboost-dev
+        - qtbase5-dev
+        - libqwt-qt5-dev
+
+    - name: clone git://sigrok.org/sigrok-util
+      git:
+        repo: 'https://github.com/sigrokproject/sigrok-util'
+        dest: '/home/{{ user }}/experimentos/sigrok-util'
+        clone: yes
+        update: yes
+        recursive: yes
+        force: yes
+      become_user: "{{ user }}"
+
+      #    - name: run script for compile
+      #      command: "./sigrok-cross-linux"
+      #      args:
+      #        chdir: "/home/{{ user }}/experimentos/sigrok-util/cross-compile/linux"
+      #      become: yes
+      #      become_user: "{{ user }}"
