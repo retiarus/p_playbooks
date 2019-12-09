@@ -4,6 +4,7 @@
     name: "{{ item }}"
     state: present
   loop: "{{ desktop_p }}"
+  ignore_errors: True
 
 - name: install pulseaudio packages
   apt:
@@ -25,11 +26,13 @@
   apt_key:
     url: http://repo.vivaldi.com/stable/linux_signing_key.pub
     state: present
+  ignore_errors: True
 
 - name: add Vivaldi repository
   apt_repository:
     repo: "deb [arch=i386,amd64] http://repo.vivaldi.com/stable/deb/ stable main"
     state: present
+  ignore_errors: True
 
 - name: update repositorys
   apt:
@@ -40,6 +43,7 @@
   apt:
     name: code
     state: present
+  ignore_errors: yes
 
 - name: install vscode extensions
   command: code --install-extension "{{ item }}"
@@ -52,11 +56,13 @@
     - "redhat.vscode-yaml"
     - "tomphilbin.gruvbox-themes"
   become_user: peregrinus
+  ignore_errors: yes
 
 - name: install Vivaldi browser
   apt:
     name: vivaldi
     state: present
+  ignore_errors: yes
 
 - include_tasks: kitty.yml
 ...
