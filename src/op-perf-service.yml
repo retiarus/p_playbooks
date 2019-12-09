@@ -49,6 +49,7 @@
         state: started
         enabled: yes
       loop: "{{ range(0, ansible_processor_cores) | list }}"
+      ignore_errors: True
 
     - name: install preload
       apt:
