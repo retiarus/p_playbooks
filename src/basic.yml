@@ -10,15 +10,16 @@
     src: ./files/ntpd/ntp.conf
     dest: /etc/ntp.conf
 
-  #- name: copy config file for openntpd
-  #  copy:
-  #    src: ./files/openntpd/ntpd.conf
-  #    dest: /etc/openntpd/ntpd.conf
-  #
-  #- name: copy apparmor permissions
-  #  copy:
-  #    src: ./files/openntpd/usr.sbin.ntpd
-  #    dest: /etc/apparmor.d/usr.sbin.ntpd
+- name: copy config file for dnsmasq
+  copy:
+    src: ./files/dnsmasq/dnsmasq.conf
+    dest: /etc/dnsmasq.conf
+
+- name: enable and start service dnsmasq
+  systemd:
+    name: dnsmasq
+    enabled: yes
+    state: restarted
 
 - name: enable and start service syslog-ng
   systemd:
