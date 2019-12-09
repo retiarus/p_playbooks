@@ -35,7 +35,7 @@
       - smbclient
       - nftables
       - acl
-      - unrar
+      - unrar-free
       - nbd-client
       - nfstrace
       - build-essential
@@ -51,6 +51,7 @@
       - glances
       - htop
       - nmon
+      - neovim
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
@@ -160,6 +161,7 @@
       - pavucontrol
       - pulseaudio-module-bluetooth
     neovim_p:
+      - gettext
       - gperf
       - luajit
       - luarocks
