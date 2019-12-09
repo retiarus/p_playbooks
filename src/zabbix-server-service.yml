@@ -1,0 +1,37 @@
+---
+- name: config and initialize zabbix service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: create zabbix dir
+      file:
+        name: /mnt/docker-data/zabbix
+        state: directory
+
+    - name: create zabbix data dir
+      file:
+        name: /mnt/docker-data/zabbix/data
+        state: directory
+
+    - name: create zabbix ssl dir
+      file:
+        name: /mnt/docker-data/zabbix/ssl
+        state: directory
+
+    - name: docker pull images
+      docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - mysql
+        - zabbix/zabbix-agent
+        - zabbix/zabbix-proxy-sqlite3
+        - zabbix/zabbix-server-mysql
+        - zabbix/zabbix-web-apache-mysql
+
+    - name: generate mysql-zabbix service using docker-compose
+      docker_compose:
+        project_src: ./docker-files/
+        services: mysql-zabbix
+        state: present
