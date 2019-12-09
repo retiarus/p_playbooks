@@ -54,10 +54,10 @@ services:
       - PGID=2002
       - TZ=America/Sao_Paulo
     volumes:
-      - /var/lib/heimdall:/config
+      - /mnt/docker-data/heimdall/config:/config
     ports:
-      - 80:80
-      - 443:443
+      - 81:80
+      - 444:443
     restart: unless-stopped
 
   portainer:
@@ -65,6 +65,7 @@ services:
     container_name: portainer
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - /mnt/docker-data/portainer/data:/data
     ports:
       - "9000:9000"
 
@@ -76,10 +77,10 @@ services:
      - "1883:1883"
     restart: always
     volumes:
-      - /etc/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-      - /etc/mosquitto/jp.pw:/etc/config/jp.pw:ro
-      - /var/lib/mosquitto/data:/mosquitto/data
-      - /var/lib/mosquitto/log:/mosquitto/log
+      - /mnt/docker-data/mosquitto/etc/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - /mnt/docker-data/mosquitto/etc/jp.pw:/mosquitto/config/jp.pw:ro
+      - /mnt/docker-data/mosquitto/data:/mosquitto/data
+      - /mnt/docker-data/mosquitto/log:/mosquitto/log
     networks:
       - iot_grafana
 
@@ -94,21 +95,21 @@ services:
      - "8083:8083"
      - "8086:8086"
     volumes:
-     - /var/lib/influxdb/data:/var/lib/influxdb
-     - /etc/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+     - /mnt/docker-files/influxdb/data:/var/lib/influxdb
+     - /mnt/docker-files/influxdb/etc:/etc/influxdb
     networks:
      - iot_grafana
 
   grafana:
-    image: grafana
+    image: grafana/grafana
     container_name: grafana
     restart: always
     ports:
      - "3000:3000"
     volumes:
-      - grafana-db:/var/lib/grafana
-      - grafana-log:/var/log/grafana
-      - grafana-conf:/etc/grafana
+     - /mnt/docker-data/grafana/data:/var/lib/grafana
+     - /mnt/docker-data/grafana/log:/var/log/grafana
+     - /mnt/docker-data/grafana/etc:/etc/grafana
     networks:
       - iot_grafana
 
@@ -128,8 +129,8 @@ services:
       - RUN_ON_START=true
       - USE_CRON=true
     volumes:
-      - /var/lib/diskover/config:/config
-      - /var/lib/diskover/data:/data
+      - /mnt/docker-data/diskover/config:/config
+      - /nfs:/data
     ports:
       - 80:80
       - 9181:9181
@@ -142,9 +143,9 @@ services:
 
   elasticsearch:
     container_name: elasticsearch
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.9
+    image: elasticsearch:5.6.9
     volumes:
-      - /var/lib/elasticsearch/data:/usr/share/elasticsearch/data
+      - /mnt/docker-data/elasticsearch/data:/usr/share/elasticsearch/data
     environment:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
@@ -157,7 +158,7 @@ services:
     container_name: redis
     image: redis:alpine
     volumes:
-      - /var/lib/redis:/data
+      - /mnt/docker-data/redis/data:/data
 
   traefik:
     container_name: traefik
@@ -211,14 +212,15 @@ services:
 
   bitwarden:
     image: bitwardenrs/server:latest
+    container_name: bitwarden
     user: 1030:1030
     volumes:
-      - /var/lib/bitwarden/data:/data
-      - /var/lib/bitwarden/certs:/ssl
+      - /mnt/docker-data/bitwarden/data:/data
+      - /mnt/docker-data/bitwarden/certs:/ssl
     environment:
       - WEBSOCKET_ENABLED=true
       - ROCKET_PORT=1024
-        #    - ROCKET_TLS='{certs="/ssl/certs.pem", key="/ssl/key.pem"}'
+      - ROCKET_TLS={certs=/ssl/bitwarden.crt, key=/ssl/bitwarden.key}
     ports:
       - 8080:1024
       - 3012:3012
@@ -234,7 +236,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - /home/data-research:/var/lib/postgresql/data
+      - /mnt/docker-data/postgres/data:/var/lib/postgresql/data
     networks:
       - postgres_network
 
@@ -242,7 +244,7 @@ services:
     image: dpage/pgadmin4
     container_name: pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: "retiarus@gmail.com"
+      PGADMIN_DEFAULT_EMAIL: "peregrinus@falco.net"
       PGADMIN_DEFAULT_PASSWORD: "a1b2c3d4"
     ports:
       - "16543:80"
@@ -251,13 +253,40 @@ services:
     networks:
       - postgres_network
 
-volumes:
-  grafana-db:
-    driver: local
-  grafana-log:
-    driver: local
-  grafana-conf:
-    driver: local
+  letsencrypt:
+    image: linuxserver/letsencrypt
+    container_name: letsencrypt
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=2050
+      - PGID=2050
+      - TZ=America/Sao_Paulo
+      - URL=home-tau.duckdns.org
+      - SUBDOMAINS=wildcard
+      - VALIDATION=duckdns
+      - DUCKDNSTOKEN=ecf331f9-13bc-4921-94a8-0d8f54910838
+    volumes:
+      - /mnt/docker-data/letsencrypt/config:/config
+    ports:
+      - 443:443
+      - 80:80
+    restart: unless-stopped
+  
+  mysql-zabbix:
+    image: mysql
+    container_name: mysql-zabbix
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_DATABASE=zabbix
+      - MYSQL_USER=zabbix
+      - MYSQL_PASSWORD=zabbix
+    volumes:
+      - /mnt/docker-data/zabbix/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    command: "--default-authentication-plugin=mysql_native_password"
+    restart: unless-stopped
 
 networks:
   iot_grafana:
