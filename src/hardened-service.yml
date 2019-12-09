@@ -85,9 +85,11 @@
         dest: /etc/nftables.conf
         owner: root
         group: root
+      when: ansible_facts['hostname'] != 'pve'
 
     - name: start nftables service
       systemd:
         name: nftables
         state: restarted
         enabled: yes
+      when: ansible_facts['hostname'] != 'pve'
