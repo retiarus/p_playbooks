@@ -1,5 +1,5 @@
 ---
-- name: config and install zram
+- name: config op-perf-service
   hosts: all
   become: yes
   vars:
@@ -49,3 +49,37 @@
         state: started
         enabled: yes
       loop: "{{ range(0, ansible_processor_cores) | list }}"
+
+    - name: install preload
+      apt:
+        name: preload
+        state: present
+
+    - name: start preload.service
+      systemd:
+        name: preload
+        state: started
+        enabled: yes
+
+    - name: install prelink
+      apt:
+        name: prelink
+        state: present
+
+    - name: create apt.conf
+      file:
+        name: /etc/apt/apt.conf
+        state: touch
+
+    - name: add config to prelink in apt.conf
+      lineinfile:
+        path: "/etc/apt/apt.conf"
+        line: "DPkg::Post-Invoke {\"echo Running prelink, please wait...;/etc/cron.daily/prelink\";}"
+
+    - name: copy config file to prelink
+      copy:
+        src: ./files/prelink/prelink
+        dest: /etc/default/prelink
+
+    - name: execute prelink
+      command: /etc/cron.daily/prelink
