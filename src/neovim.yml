@@ -8,31 +8,34 @@
 - name: clone neovim
   git:
     repo: 'https://github.com/neovim/neovim'
-    dest: '/home/{{ user }}/neovim'
+    dest: '/home/{{ user }}/.neovim'
     clone: yes
     update: yes
     recursive: yes
     force: yes
+    version: release-0.4
   become_user: "{{ user }}"
 
-- name: run distclean
+- name: run distcleain in neovim
   command: 'make distclean'
   args:
-    chdir: "/home/{{ user }}/neovim/"
+    chdir: "/home/{{ user }}/.neovim/"
   become: yes
   become_user: "{{ user }}"
 
 - name: run make
-  command: "make CMAKE_BUILD_TYPE=Release"
+  command: "make -j4 CMAKE_BUILD_TYPE=Release"
   args:
-    chdir: "/home/{{ user }}/neovim"
+    chdir: "/home/{{ user }}/.neovim"
   become: yes
   become_user: "{{ user }}"
+  ignore_errors: True
 
 - name: run make install
   command: "make CMAKE_INSTALL_PREFIX=/home/{{ user }}/ install"
   args:
-    chdir: "/home/{{ user }}/neovim"
+    chdir: "/home/{{ user }}/.neovim"
   become: yes
   become_user: "{{ user }}"
+  ignore_errors: True
 ...
