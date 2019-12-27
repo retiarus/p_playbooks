@@ -55,12 +55,14 @@
       apt:
         name: preload
         state: present
+      ignore_errors: True
 
     - name: start preload.service
       systemd:
         name: preload
         state: started
         enabled: yes
+      ignore_errors: True
 
     - name: install prelink
       apt:
