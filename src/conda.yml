@@ -123,6 +123,7 @@
         - "@jupyterlab/toc"
       args:
         chdir: '/var/lib/jupyterhub'
+      ignore_errors: True
 
     - name: update conda to remove problems with versions
       command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
