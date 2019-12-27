@@ -1,0 +1,58 @@
+---
+- name: config and initialize mpi
+  hosts:
+    - ubuntu-02
+    - ubuntu-03
+    - falco03
+  become: yes
+
+  tasks:
+    - name: install mpich
+      apt:
+        name: mpich
+        state: present
+
+    - name: create mpiuser
+      user:
+         name: mpiuser
+         group: users
+         shell: /bin/false
+         home: /home/mpiuser
+         uid: 4000
+         generate_ssh_key: yes
+         ssh_key_bits: 4096
+         ssh_key_file: .ssh/id_rsa
+
+    - name: create authorized_keys
+      file:
+        path: "/home/mpiuser/.ssh/authorized_keys"
+        state: touch
+
+    - name: add pubkeys to master server
+      authorized_key:
+        user: mpiuser
+        key: "{{ lookup('file', item) }}"
+      with_fileglob:
+        - /home/mpiuser/.ssh/ir_rsa.pub
+
+    - name: remove temp local pubkey copies
+      local_action: file dest="/tmp/pubkey" state=absent
+
+    - name: copy machinefile
+      copy:
+        src: ./files/mpi/machinefile
+        dest: /home/mpiuser/machinefile
+        owner: mpiuser
+        group: users
+
+    - name: add user peregrinus to mpiuser
+      user:
+        name: peregrinus
+        groups: users
+        append: yes
+
+    - name: add user peregrinus to mpiuser
+      user:
+        name: peregrinus
+        groups: users
+        append: yes
