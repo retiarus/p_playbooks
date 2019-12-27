@@ -30,6 +30,11 @@
     name: "{{ user }}"
     shell: /bin/zsh
 
+- name: set default root shell to zsh
+  user:
+    name: root
+    shell: /bin/zsh
+
 - name: Create a 4096-bit SSH key for user {{ user }}
   user:
     name: "{{ user }}"
@@ -42,7 +47,6 @@
     name: "{{ item }}"
     executable: pip3
     extra_args: --user
-  state: latest
   loop:
     - pipenv
     - virtualenvwrapper
@@ -84,7 +88,7 @@
 - name: create user deluge
   user:
      name: deluge
-     group: deluge
+     group: users
      shell: /bin/false
      home: /var/lib/deluge/
      uid: 2000
@@ -98,7 +102,7 @@
 - name: create user flexget
   user:
      name: flexget
-     group: flexget
+     group: users
      shell: /bin/false
      home: /var/lib/flexget
      uid: 2001
@@ -118,6 +122,17 @@
     recursive: yes
     force: yes
   become_user: "{{ user }}"
+
+- name: clone p_dotfile to root
+  git:
+    repo: 'https://github.com/retiarus/p_dotfiles'
+    dest: '/root/p_dotfiles'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: root
+  ignore_errors: True
 
 - name: crete dir's
   file:
