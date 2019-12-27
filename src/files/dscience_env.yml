@@ -1,86 +1,68 @@
 name: dscience
 channels:
+  - anaconda
   - conda-forge
   - defaults
 dependencies:
+  - _libgcc_mutex
   - _py-xgboost-mutex
-  - basemap
-  - ca-certificates
-  - cartopy
-  - certifi
-  - cryptography
-  - cryptography-vectors
-  - curl
-  - dask
-  - deap
-  - dill
-  - geopandas
-  - grpcio
-  - ipykernel
-  - ipyparallel
-  - ipython
-  - jupyter_client
-  - krb5
-  - libcurl
-  - libgfortran
-  - libpq
-  - libsodium
-  - libssh2
-  - libxgboost
-  - matplotlib
-  - matplotlib-base
-  - mkl_fft
-  - mkl_random
-  - multiprocess
-  - openblas
-  - openssl
-  - pandas
-  - pathos
-  - pox
-  - ppft
-  - psycopg2
-  - py-xgboost
-  - pykdtree
-  - python
-  - pyzmq
-  - tensorboard
-  - tensorflow
-  - xarray
-  - xgboost
-  - zeromq
   - _tflow_select
   - absl-py
+  - aiofiles
+  - aiohttp
+  - algopy
   - asn1crypto
   - astor
+  - async-timeout
+  - asyncpg
+  - attrs
   - backcall
+  - basemap
+  - beautifulsoup4
   - blas
   - bokeh
   - bzip2
   - c-ares
+  - ca-certificates
   - cairo
+  - cartopy
+  - certifi
   - cffi
+  - cfitsio
   - chardet
   - click
   - click-plugins
   - cligj
   - cloudpickle
+  - cryptography
+  - cryptography-vectors
+  - curl
   - cycler
   - cytoolz
+  - dask
   - dask-core
   - dbus
+  - deap
   - decorator
+  - deprecated
   - descartes
+  - dill
   - distributed
   - expat
   - fiona
   - fontconfig
   - freetype
   - freexl
+  - fsspec
   - gast
   - gdal
+  - geopandas
   - geos
+  - geotiff
   - giflib
   - glib
+  - google-pasta
+  - grpcio
   - gst-plugins-base
   - gstreamer
   - h5py
@@ -89,54 +71,84 @@ dependencies:
   - heapdict
   - icu
   - idna
+  - importlib_metadata
   - intel-openmp
+  - ipykernel
+  - ipyparallel
+  - ipython
   - ipython_genutils
   - jedi
   - jinja2
+  - joblib
   - jpeg
   - json-c
   - jsonschema
+  - jupyter_client
   - jupyter_core
   - kealib
   - keras-applications
   - keras-preprocessing
   - kiwisolver
+  - krb5
+  - ld_impl_linux-64
   - libboost
+  - libcurl
   - libdap4
   - libedit
   - libffi
+  - libgcc-ng
   - libgdal
+  - libgfortran
   - libgfortran-ng
   - libkml
   - libnetcdf
   - libopenblas
   - libpng
+  - libpq
   - libprotobuf
+  - libsodium
   - libspatialindex
   - libspatialite
+  - libssh2
   - libstdcxx-ng
   - libtiff
   - libuuid
   - libxcb
+  - libxgboost
   - libxml2
   - libxslt
   - locket
   - lxml
   - markdown
   - markupsafe
+  - matplotlib
+  - matplotlib-base
   - mkl
+  - mkl-service
+  - mkl_fft
+  - mkl_random
+  - more-itertools
   - msgpack-python
+  - multidict
+  - multiprocess
   - munch
   - nbformat
   - ncurses
+  - numdifftools
   - numpy
   - numpy-base
   - olefile
+  - openblas
   - openjpeg
+  - openssl
+  - opt_einsum
   - owslib
   - packaging
+  - palettable
+  - pandas
   - parso
   - partd
+  - pathos
   - patsy
   - pcre
   - pexpect
@@ -147,24 +159,33 @@ dependencies:
   - plotly
   - poppler
   - poppler-data
+  - postgresql
+  - pox
+  - ppft
   - proj4
   - prompt_toolkit
   - protobuf
   - psutil
+  - psycopg2
   - ptyprocess
+  - py-xgboost
   - pycparser
   - pyepsg
   - pygments
+  - pykdtree
   - pyopenssl
   - pyparsing
   - pyproj
   - pyqt
+  - pyrsistent
   - pysal
   - pyshp
   - pysocks
+  - python
   - python-dateutil
   - pytz
   - pyyaml
+  - pyzmq
   - qt
   - readline
   - requests
@@ -178,23 +199,56 @@ dependencies:
   - sip
   - six
   - sortedcontainers
+  - soupsieve
   - sqlalchemy
   - sqlite
   - statsmodels
   - tblib
+  - tensorboard
+  - tensorflow
   - tensorflow-base
+  - tensorflow-estimator
   - termcolor
   - tk
   - toolz
   - tornado
+  - tqdm
   - traitlets
+  - tzcode
   - urllib3
   - wcwidth
   - werkzeug
   - wheel
+  - wrapt
+  - xarray
   - xerces-c
+  - xgboost
+  - xorg-kbproto
+  - xorg-libice
+  - xorg-libsm
+  - xorg-libx11
+  - xorg-libxext
+  - xorg-libxrender
+  - xorg-renderproto
+  - xorg-xextproto
+  - xorg-xproto
   - xz
   - yaml
+  - yarl
+  - zeromq
   - zict
+  - zipp
   - zlib
-prefix: /var/lib/jupyterhub/anaconda/envs/dscience
+  - zstd
+  - pip:
+    - colorama
+    - filelock
+    - funcsigs
+    - mpi4py
+    - pluggy
+    - py
+    - pyina
+    - pytest
+    - ray
+    - redis
+    - tscv
