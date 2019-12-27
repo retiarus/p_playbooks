@@ -7,10 +7,9 @@ PasswordAuthentication no
 X11Forwarding no
 AllowTcpForwarding no
 ClientAliveInterval 600
-ClientAliveCountMax 0
+ClientAliveCountMax 10
 MaxAuthTries 2
 LogLevel VERBOSE
-ClientAliveInterval 300
 Compression no
 MaxSessions 5
 AllowAgentForwarding no
