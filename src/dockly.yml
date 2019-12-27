@@ -1,0 +1,6 @@
+---
+- name: install dockly
+  command: npm-wrapper-global.sh dockly
+  become: yes
+  become_user: "{{ user }}"
+...

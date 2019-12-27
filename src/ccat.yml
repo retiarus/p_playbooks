@@ -1,0 +1,43 @@
+---
+- name: install go
+  apt:
+    name: golang-go
+    state: present
+
+- name: install ccat
+  command: go get -u github.com/jingweno/ccat
+  become: yes
+  become_user: "{{ user }}"
+
+- name: clone gruvbox for pygments
+  git:
+    repo: 'https://github.com/daveyarwood/gruvbox-pygments'
+    dest: '/home/{{ user }}/.local/scripts/gruvbox-pygments'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: run setup
+  command: 'python setup.py develop --user; python3 setup.py develop --user'
+  args:
+    chdir: "/home/{{ user }}/.local/scripts/gruvbox-pygments"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: clone gruvbox for pygments
+  git:
+    repo: 'https://github.com/daveyarwood/gruvbox-pygments'
+    dest: '/usr/local/scripts/gruvbox-pygments'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: run setup
+  command: 'python setup.py develop --user; python3 setup.py develop --user'
+  args:
+    chdir: "/usr/local/scripts/gruvbox-pygments"
+...

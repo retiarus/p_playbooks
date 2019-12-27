@@ -1,0 +1,6 @@
+---
+- name: install bitwarden
+  command: npm-wrapper-global.sh @bitwarden/cli
+  become: yes
+  become_user: "{{ user }}"
+...

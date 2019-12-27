@@ -1,0 +1,49 @@
+---
+- name: install pipenv, virtualenvwrapper
+  pip:
+    name: ranger-fm
+    executable: pip3
+    extra_args: --user
+  become: yes
+  become_user: "{{ user }}"
+
+- name: clone ranger-fzf-marks
+  git:
+    repo: 'https://github.com/laggardkernel/ranger-fzf-marks.git'
+    dest: '/home/{{ user }}/.config/ranger/plugins/fzf-marks'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: clone ranger-cmus
+  git:
+    repo: 'https://github.com/maximtrp/ranger-cmus'
+    dest: '/home/{{ user }}/.config/ranger/plugins/ranger-cmus'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: clone devicons
+  git:
+    repo: 'https://github.com/alexanderjeurissen/ranger_devicons'
+    dest: '/home/{{ user }}/.config/ranger/plugins/ranger_devicons'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: clone ranger-autojump
+  git:
+    repo: 'https://github.com/fdw/ranger-autojump'
+    dest: '/home/{{ user }}/.config/ranger/plugins/ranger-autojump'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+...

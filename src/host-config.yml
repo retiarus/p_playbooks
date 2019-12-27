@@ -53,6 +53,7 @@
       - htop
       - nmon
       - neovim
+      - autojump
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
@@ -258,6 +259,21 @@
 
     - include_tasks: full-server.yml
       when: target == "full-server"
+
+    - include_tasks: dockly.yml
+      when: target == "dockly"
+
+    - include_tasks: cmus.yml
+      when: target == "cmus"
+
+    - include_tasks: bitwarden.yml
+      when: target == "bitwarden"
+
+    - include_tasks: ranger.yml
+      when: target == "ranger"
+
+    - include_tasks: ccat.yml
+      when: target == "ccat"
 
     - name: install task
       apt:

@@ -1,0 +1,59 @@
+---
+- name: install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - libroar-dev
+    - libresample1-dev
+    - libpulse-dev
+    - libopusfile-dev
+    - libavcodec-dev
+    - libavformat-dev
+    - libncursesw5-dev
+    - libsystemd-dev
+    - libsamplerate0-dev
+    - libjack-dev
+
+- name: download cmus
+  get_url:
+    url: https://github.com/cmus/cmus/archive/v2.8.0.tar.gz
+    dest: /tmp/cmus.tar.gz
+  become: yes
+  become_user: "{{ user }}"
+
+- name: create .cmus
+  file:
+    path: /home/{{ user }}/.cmus
+    state: directory
+    owner: "{{ user }}"
+    group: users
+
+- name: extract cmus
+  unarchive:
+    src: /tmp/cmus.tar.gz
+    dest: /home/{{ user }}/.cmus
+  become: yes
+  become_user: "{{ user }}"
+
+- name: configure cmus
+  command: ./configure prefix=/home/{{ user }}
+  args:
+    chdir: "/home/{{ user }}/.cmus/cmus-2.8.0"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: make
+  command: make -j4
+  args:
+    chdir: "/home/{{ user }}/.cmus/cmus-2.8.0"
+  become: yes
+  become_user: "{{ user }}"
+
+- name: make install
+  command: make install
+  args:
+    chdir: "/home/{{ user }}/.cmus/cmus-2.8.0"
+  become: yes
+  become_user: "{{ user }}"
+...
