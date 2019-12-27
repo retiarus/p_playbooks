@@ -10,10 +10,21 @@
     src: ./files/ntpd/ntp.conf
     dest: /etc/ntp.conf
 
+- name: disable systemd-resolved
+  systemd:
+    name: systemd-resolved.service
+    enabled: no
+    state: stopped
+
 - name: copy config file for dnsmasq
   copy:
     src: ./files/dnsmasq/dnsmasq.conf
     dest: /etc/dnsmasq.conf
+
+- name: copy config file for resolv.conf
+  copy:
+    src: ./files/dnsmasq/resolv.conf
+    dest: /etc/resolv.conf
 
 - name: enable and start service dnsmasq
   systemd:
