@@ -59,4 +59,6 @@
     name: autofs
     enabled: yes
     state: started
+
+- include_tasks: power.yml
 ...

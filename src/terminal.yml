@@ -22,8 +22,22 @@
   loop: "{{ bridges_p }}"
   ignore_errors: True
 
-- include_tasks: neovim.yml
+- name: install nodejs packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ nodejs_p }}"
   ignore_errors: True
+
+  #- include_tasks: "{{ item }}"
+  #  with_items:
+  #    - neovim.yml
+  #    - dockly.yml
+  #    - cmus.yml
+  #    - bitwarden.yml
+  #    - ranger.yml
+  #    - ccat.yml
+  #    - neomutt.yml
 
 - name: set default shell to zsh
   user:
