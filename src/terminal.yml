@@ -29,15 +29,15 @@
   loop: "{{ nodejs_p }}"
   ignore_errors: True
 
-  #- include_tasks: "{{ item }}"
-  #  with_items:
-  #    - neovim.yml
-  #    - dockly.yml
-  #    - cmus.yml
-  #    - bitwarden.yml
-  #    - ranger.yml
-  #    - ccat.yml
-  #    - neomutt.yml
+- include_tasks: "{{ item }}"
+  with_items:
+    - neovim.yml
+    - dockly.yml
+    - cmus.yml
+    - bitwarden.yml
+    - ranger.yml
+    - ccat.yml
+    - neomutt.yml
 
 - name: set default shell to zsh
   user:
