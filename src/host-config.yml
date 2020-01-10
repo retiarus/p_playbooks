@@ -54,6 +54,7 @@
       - nmon
       - neovim
       - autojump
+      - wakeonlan
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
@@ -274,6 +275,9 @@
 
     - include_tasks: ccat.yml
       when: target == "ccat"
+
+    - include_tasks: neomutt.yml
+      when: target == "neomutt"
 
     - name: install task
       apt:
