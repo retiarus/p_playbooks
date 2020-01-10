@@ -1,8 +1,9 @@
 ---
 - name: config conda
   hosts: all
+  roles:
+    - ansible-modules-bitwarden
   become: yes
-  become_method: sudo
   become_user: root
   vars:
     user: peregrinus
@@ -79,6 +80,11 @@
         group: jupyterhub
         recurse: yes
 
+    - name: add conda-forge as top-priority
+      command: /var/lib/jupyterhub/anaconda/bin/conda config --add channels conda-forge
+      become: yes
+      become_user: jupyterhub
+
     - name: update conda
       command: /var/lib/jupyterhub/anaconda/bin/conda update --all -y
       become: yes
@@ -102,7 +108,25 @@
         jupyterhub \
         sudospawner \
         widgetsnbextension \
-        ipympl
+        ipympl \
+        jupytext \
+        python-language-server \
+        r-languageserver \
+        black
+      args:
+        chdir: '/var/lib/jupyterhub'
+      become: yes
+      become_user: jupyterhub
+
+    - name: install jupyter-lsp
+      command: /var/lib/jupyterhub/anaconda/bin/pip install jupyter-lsp
+      args:
+        chdir: '/var/lib/jupyterhub'
+      become: yes
+      become_user: jupyterhub
+
+    - name: install dask-labextension
+      command: /var/lib/jupyterhub/anaconda/bin/pip install dask_labextension
       args:
         chdir: '/var/lib/jupyterhub'
       become: yes
@@ -121,6 +145,33 @@
         - "jupyterlab_tensorboard"
         - "@jupyterlab/plotly-extension"
         - "@jupyterlab/toc"
+        - "jupyterlab-jupytext"
+        - "@krassowski/jupyterlab-lsp"
+        - "@ryantam626/jupyterlab_code_formatte"
+      args:
+        chdir: '/var/lib/jupyterhub'
+      ignore_errors: True
+
+    - name: "enable jupytext context manager"
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter serverextension enable jupytext
+      become: yes
+      become_user: jupyterhub
+      args:
+        chdir: '/var/lib/jupyterhub'
+      ignore_errors: True
+
+    - name: "enable jupyterlab-code-formatter"
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter serverextension enable --py jupyterlab_code_formatter
+      become: yes
+      become_user: jupyterhub
+      args:
+        chdir: '/var/lib/jupyterhub'
+      ignore_errors: True
+
+    - name: "enable dask_labextension"
+      command: /var/lib/jupyterhub/anaconda/bin/jupyter serverextension enable --py --sys-prefix dask_labextension
+      become: yes
+      become_user: jupyterhub
       args:
         chdir: '/var/lib/jupyterhub'
       ignore_errors: True
