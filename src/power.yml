@@ -1,0 +1,26 @@
+---
+- name: copy powerbtn-acpi-support.sh
+  copy:
+    src: ./files/acpi/powerbtn-acpi-support.sh
+    dest: /etc/acpi/powerbtn-acpi-support.sh
+
+- name: copy powerbtn-acpi-support
+  copy:
+    src: ./files/acpi/powerbtn-acpi-support
+    dest: /etc/acpi/events/powerbtn-acpi-support
+
+- name: restart acpid
+  systemd:
+    name: acpid
+    state: restarted
+
+- name: add systemctl hybrid-sleep to sudoers
+  lineinfile:
+    path: /etc/sudoers
+    line: "{{ item }}"
+  loop:
+    - "peregrinus all=(root) nopasswd: /bin/systemctl hybrid-sleep"
+    - "peregrinus all=(root) nopasswd: /bin/systemctl hibernate"
+    - "peregrinus all=(root) nopasswd: /bin/systemctl suspend"
+    - "peregrinus all=(root) nopasswd: /bin/systemctl reboot"
+    - "peregrinus all=(root) nopasswd: /bin/systemctl poweroff"
