@@ -1,0 +1,93 @@
+---
+- name: install neomutt
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - xsltproc
+    - docbook
+    - docbook-defguide
+    - docbook-dsssl
+    - docbook-dsssl-doc
+    - docbook-ebnf
+    - docbook-html-forms
+    - docbook-mathml
+    - docbook-simple
+    - docbook-slides
+    - docbook-slides-demo
+    - docbook-to-man
+    - docbook-utils
+    - docbook-website
+    - docbook-xml
+    - docbook-xsl
+    - docbook-xsl-doc-html
+    - docbook-xsl-doc-pdf
+    - docbook-xsl-doc-text
+    - docbook-xsl-ns
+    - docbook-xsl-saxon
+    - docbook2odf
+    - docbook2x
+    - docbook5-xml
+    - libidn11-dev
+    - libidn2-dev
+    - libgpgmepp-dev
+    - libgpgme++2v5
+    - libgpgme-dev
+    - python2-gpg
+    - python3-gpg
+    - notmuch
+    - notmuch-addrlookup
+    - notmuch-mutt
+    - notmuch-vim
+    - libnotmuch-dev
+    - libgsasl7-dev
+    - libsasl2-dev
+    - liblua50-dev
+    - liblua5.2-dev
+    - liblua5.3-dev
+    - lua-nvim-dev
+    - libgnutls28-dev
+    - libkyotocabinet-dev
+    - libtokyocabinet-dev
+    - libkrb5-dev
+    - krb5-config
+    - python-notmuch
+    - python3-notmuch
+    - libluabind-dev
+    - nemoutt
+    - libsqlite0-dev
+    - libsqlite3-dev
+    - w3m
+
+- name: clone neomutt
+  git:
+    repo: 'https://github.com/neomutt/neomutt'
+    dest: '/home/{{ user }}/.neomutt'
+    clone: yes
+    update: yes
+    recursive: yes
+    force: yes
+  become_user: "{{ user }}"
+
+- name: configure neomutt
+  command: './configure --gnutls --gpgme --gss --sasl --tokyocabinet --fmemopen --locales-fix --mixmaster --homespool --ssl --gnutls --gpgme --gss --sasl --autocrypt --lua --notmuch --sqlite'
+  args:
+    chdir: "/home/{{ user }}/.neomutt/"
+  become: yes
+
+- name: run make
+  command: "make -j4"
+  args:
+    chdir: "/home/{{ user }}/.neomutt"
+  become: yes
+  become_user: "{{ user }}"
+  ignore_errors: True
+
+- name: run make install
+  command: "make DESTDIR=/home/{{ user }} install"
+  args:
+    chdir: "/home/{{ user }}/.neomutt"
+  become: yes
+  become_user: "{{ user }}"
+  ignore_errors: True
+...
