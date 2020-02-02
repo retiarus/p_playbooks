@@ -19,8 +19,8 @@
     path: /etc/sudoers
     line: "{{ item }}"
   loop:
-    - "peregrinus all=(root) nopasswd: /bin/systemctl hybrid-sleep"
-    - "peregrinus all=(root) nopasswd: /bin/systemctl hibernate"
-    - "peregrinus all=(root) nopasswd: /bin/systemctl suspend"
-    - "peregrinus all=(root) nopasswd: /bin/systemctl reboot"
-    - "peregrinus all=(root) nopasswd: /bin/systemctl poweroff"
+    - "peregrinus ALL=(root) NOPASSWD: /bin/systemctl hybrid-sleep"
+    - "peregrinus ALL=(root) NOPASSWD: /bin/systemctl hibernate"
+    - "peregrinus ALL=(root) NOPASSWD: /bin/systemctl suspend"
+    - "peregrinus ALL=(root) NOPASSWD: /bin/systemctl reboot"
+    - "peregrinus ALL=(root) NOPASSWD: /bin/systemctl poweroff"
