@@ -26,6 +26,11 @@
     src: ./files/dnsmasq/resolv.conf
     dest: /etc/resolv.conf
 
+- name: copy config file for NetworkManager
+  copy:
+    src: ./files/dnsmasq/NetworkManager.conf
+    dest: /etc/NetworkManager/NetworkManager.conf
+
 - name: enable and start service dnsmasq
   systemd:
     name: dnsmasq
