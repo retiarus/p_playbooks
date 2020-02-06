@@ -55,6 +55,7 @@
       - neovim
       - autojump
       - wakeonlan
+      - npm
     pulseaudio_p:
       - pulseaudio-module-zeroconf
       - pulsemixer
