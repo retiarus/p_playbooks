@@ -1,6 +1,8 @@
 ---
 - name: hardened configuration
-  hosts: all
+  hosts: workhome
+  roles:
+    - ansible-modules-bitwarden
   become: yes
 
   tasks:
