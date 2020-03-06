@@ -1,8 +1,11 @@
 ---
 - name: install go
   apt:
-    name: golang-go
+    name: "{{ item }}"
     state: present
+  loop:
+    - golang-go
+    - python3-pygments
 
 - name: install ccat
   command: go get -u github.com/jingweno/ccat
