@@ -1,20 +1,21 @@
-
 ---
 - name: config and initialize letsencrypt service
   hosts: all
+  roles:
+    - ansible-modules-bitwarden
   become: yes
 
   tasks:
     - name: create group letsencrypt
       group:
-        name: heimdall
+        name: letsencrypt
         state: present
         gid: 2050
 
     - name: create user letsencrypt
       user:
-         name: heimdall
-         group: heimdall
+         name: letsencrypt
+         group: letsencrypt
          shell: /bin/false
          home: /mnt/docker-data/letsencrypt
          uid: 2050
@@ -25,3 +26,14 @@
         state: directory
         owner: letsencrypt
         group: letsencrypt
+
+    - name: copy docker-letsencrypt.service
+      copy:
+        src: ./files/system/docker-letsencrypt.service
+        dest: /etc/systemd/system/docker-letsencrypt.service
+
+    - name: enable and start service letsencrypt
+      systemd:
+        name: docker-letsencrypt
+        enabled: yes
+        state: restarted

@@ -1,0 +1,13 @@
+[Unit]
+Description=Letsencrypt Container
+After=docker.service
+Wants=network-online.target docker.socket
+Requires=docker.socket
+
+[Service]
+Restart=always
+ExecStart=/usr/bin/docker start -a letsencrypt
+ExecStop=/usr/bin/docker stop -t 10 letsencrypt
+
+[Install]
+WantedBy=multi-user.target
