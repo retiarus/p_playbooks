@@ -22,12 +22,21 @@
     force: yes
   become_user: "{{ user }}"
 
-- name: run setup
-  command: 'python setup.py develop --user; python3 setup.py develop --user'
+- name: run setup for gruvbox-pygments local (python)
+  command: 'python setup.py develop --user'
   args:
     chdir: "/home/{{ user }}/.local/scripts/gruvbox-pygments"
   become: yes
   become_user: "{{ user }}"
+  ignore_errors: True
+
+- name: run setup for gruvbox-pygments local (python3)
+  command: 'python3 setup.py develop --user'
+  args:
+    chdir: "/home/{{ user }}/.local/scripts/gruvbox-pygments"
+  become: yes
+  become_user: "{{ user }}"
+  ignore_errors: True
 
 - name: clone gruvbox for pygments
   git:
@@ -37,10 +46,14 @@
     update: yes
     recursive: yes
     force: yes
-  become_user: "{{ user }}"
 
-- name: run setup
-  command: 'python setup.py develop --user; python3 setup.py develop --user'
+- name: run setup for gruvbox-pygments global (python)
+  command: 'python setup.py develop'
+  args:
+    chdir: "/usr/local/scripts/gruvbox-pygments"
+
+- name: run setup for gruvbox-pygments global (python3)
+  command: 'python3 setup.py develop'
   args:
     chdir: "/usr/local/scripts/gruvbox-pygments"
 ...
