@@ -122,6 +122,7 @@
       - wget
       - guake
       - parcellite
+      - qutebrowser
     nodejs_p:
       - npm
       - nodejs
