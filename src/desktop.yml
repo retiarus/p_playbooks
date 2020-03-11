@@ -60,7 +60,7 @@
 
 - name: install Vivaldi browser
   apt:
-    name: vivaldi
+    name: vivaldi-stable
     state: present
   ignore_errors: yes
 
