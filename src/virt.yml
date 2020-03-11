@@ -8,7 +8,7 @@
 
 - name: config network to libvirt
   copy:
-    src: ./files/default.xml
+    src: ./files/libvirt/default.xml
     dest: /etc/libvirt/qemu/networks/default.xml
     owner: root
     group: root
