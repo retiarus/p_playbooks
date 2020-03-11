@@ -3,7 +3,7 @@
   copy:
     src: ./files/npm-wrapper-global.sh
     dest: /usr/local/bin/npm-wrapper-global.sh
-    mode: r=rwx,g=rx,o=rx
+    mode: '0755'
 
 - name: install dockly
   command: npm-wrapper-global.sh dockly
