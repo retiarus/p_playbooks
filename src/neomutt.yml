@@ -33,7 +33,7 @@
     - libgpgmepp-dev
     - libgpgme++2v5
     - libgpgme-dev
-    - python2-gpg
+    - python-gpg
     - python3-gpg
     - notmuch
     - notmuch-addrlookup
@@ -54,7 +54,7 @@
     - python-notmuch
     - python3-notmuch
     - libluabind-dev
-    - nemoutt
+    - neomutt
     - libsqlite0-dev
     - libsqlite3-dev
     - w3m
