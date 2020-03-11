@@ -1,7 +1,10 @@
 ---
 - name: config and initialize clamav service
   hosts: all
+  roles:
+    - ansible-modules-bitwarden
   become: yes
+  become_user: root
 
   tasks:
     - name: install clamav
@@ -15,6 +18,7 @@
         - clamtk-nautilus
         - clamav
         - clamav-daemon
+      ignore_errors: True
 
     - name: stop clamav-freshclam
       systemd:
