@@ -1,4 +1,12 @@
 ---
+- name: install npm
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - npm
+    - nodejs
+
 - name: install bitwarden
   command: npm-wrapper-global.sh @bitwarden/cli
   become: yes
