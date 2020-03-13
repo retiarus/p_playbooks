@@ -29,16 +29,6 @@
   loop: "{{ nodejs_p }}"
   ignore_errors: True
 
-- include_tasks: "{{ item }}"
-  with_items:
-    - neovim.yml
-    - dockly.yml
-    - cmus.yml
-    - bitwarden.yml
-    - ranger.yml
-    - ccat.yml
-    - neomutt.yml
-
 - name: set default shell to zsh
   user:
     name: "{{ user }}"
@@ -55,6 +45,17 @@
     generate_ssh_key: yes
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
+
+- name: Download get-pip.py
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp/get-pip.py
+
+- name: run get-pip python3
+  command: python3 /tmp/get-pip.py --force-reinstall
+
+- name: run get-pip python
+  command: python /tmp/get-pip.py --force-reinstall
 
 - name: install pipenv, virtualenvwrapper
   pip:
@@ -222,4 +223,14 @@
 
 - name: update list of certificates
   command: update-ca-certificates
+
+- include_tasks: "{{ item }}"
+  with_items:
+    - neovim.yml
+    - dockly.yml
+    - cmus.yml
+    - bitwarden.yml
+    - ranger.yml
+    - ccat.yml
+    - neomutt.yml
 ...
