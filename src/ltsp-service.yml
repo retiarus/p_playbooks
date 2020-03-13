@@ -1,0 +1,42 @@
+---
+- name: config ltsp service
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: add repository
+      get_url:
+        url: https://ltsp.org/misc/ltsp-ubuntu-ppa-bionic.list
+        dest: /etc/apt/sources.list.d/ltsp-ubuntu-ppa-bionic.list
+
+    - name: get key
+      get_url:
+        url: https://ltsp.org/misc/ltsp_ubuntu_ppa.gpg
+        dest: /etc/apt/trusted.gpg.d/ltsp_ubuntu_ppa.gpg
+
+    - name: apt update
+      apt:
+        update_cache: yes
+
+    - name: install dependencies
+      apt:
+        name: "{{ item }}"
+      loop:
+          - ltsp
+          - ltsp-binaries
+          - dnsmasq
+          - nfs-kernel-server
+          - openssh-server
+          - squashfs-tools
+          - ethtool
+          - net-tools
+          - epoptes
+
+    - name: add peregrinus to epoptes
+      user:
+        name: peregrinus
+        groups: epoptes
+        append: yes
+
+    - name: config dnsmasq
+      command: ltsp dnsmasq
