@@ -1,6 +1,8 @@
 ---
 - name: config and install sigrok
   hosts: all
+  roles:
+    - ansible-modules-bitwarden
   become: yes
   vars:
     user: peregrinus
@@ -44,6 +46,9 @@
         - libboost-dev
         - qtbase5-dev
         - libqwt-qt5-dev
+        - libzip-dev
+        - sdcc
+        - libglibmm-2.4-dev
 
     - name: clone git://sigrok.org/sigrok-util
       git:
@@ -55,9 +60,9 @@
         force: yes
       become_user: "{{ user }}"
 
-      #    - name: run script for compile
-      #      command: "./sigrok-cross-linux"
-      #      args:
-      #        chdir: "/home/{{ user }}/experimentos/sigrok-util/cross-compile/linux"
-      #      become: yes
-      #      become_user: "{{ user }}"
+    - name: run script for compile
+      command: "./sigrok-cross-linux"
+      args:
+        chdir: "/home/{{ user }}/experimentos/sigrok-util/cross-compile/linux"
+      become: yes
+      become_user: "{{ user }}"
