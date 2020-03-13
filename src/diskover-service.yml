@@ -1,0 +1,28 @@
+---
+- name: config diskover service
+  hosts: all
+  roles:
+    - ansible-modules-bitwarden
+  become: yes
+
+  tasks:
+    - name: create group diskover
+      group:
+        name: diskover
+        state: present
+        gid: 2200
+
+    - name: create user diskover
+      user:
+         name: diskover
+         group: diskover
+         shell: /bin/false
+         home: /mnt/docker-data/diskover
+         uid: 2200
+
+    - name: create config dir
+      file:
+        path: /mnt/docker-data/diskover/config
+        state: directory
+        owner: diskover
+        group: diskover
