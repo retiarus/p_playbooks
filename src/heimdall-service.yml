@@ -1,7 +1,8 @@
-
 ---
 - name: config and initialize heimdall service
   hosts: all
+  roles:
+    - ansible-modules-bitwarden
   become: yes
 
   tasks:
