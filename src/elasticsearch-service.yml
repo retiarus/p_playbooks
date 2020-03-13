@@ -1,0 +1,31 @@
+---
+- name: config elastic, kibana. logstash service
+  hosts: all
+  roles:
+    - ansible-modules-bitwarden
+  become: yes
+
+  tasks:
+    - name: create basic dirs
+      file:
+        path: /mnt/docker-data/{{ item }}
+        state: directory
+      with_items:
+        - kibana
+        - elasticsearch
+        - logstash
+
+    - name: create elasticsearch data dir
+      file:
+        path: /mnt/docker-data/elasticsearch/data
+        state: directory
+
+    - name: create kibana config dir
+      file:
+        path: /mnt/docker-data/kibana/config
+        state: directory
+
+    - name: create logstash config dir
+      file:
+        path: /mnt/docker-data/logstash/config
+        state: directory
