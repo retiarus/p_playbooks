@@ -8,7 +8,7 @@
 - name: clone kitty
   git:
     repo: 'https://github.com/kovidgoyal/kitty'
-    dest: '/home/{{ user }}/kitty'
+    dest: '/home/{{ user }}/.kitty'
     clone: yes
     update: yes
     recursive: yes
@@ -19,13 +19,13 @@
 - name: run make
   command: "make"
   args:
-    chdir: "/home/{{ user }}/kitty"
+    chdir: "/home/{{ user }}/.kitty"
   become: yes
   become_user: "{{ user }}"
 
 - name: create link to kitty
   file:
-    src: "/home/{{ user }}/kitty/kitty/launcher/kitty"
+    src: "/home/{{ user }}/.kitty/kitty/launcher/kitty"
     dest: "/home/{{ user }}/bin/kitty"
     state: link
     owner: peregrinus
