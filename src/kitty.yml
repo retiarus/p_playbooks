@@ -13,6 +13,7 @@
     update: yes
     recursive: yes
     force: yes
+    version: v0.16.0
   become_user: "{{ user }}"
 
 - name: run make
