@@ -1,0 +1,18 @@
+---
+- name: config and initialize mattermost service
+  hosts: all
+  roles:
+    - ansible-modules-bitwarden
+  become: yes
+
+  tasks:
+    - name: copy docker-mattermost.service
+      copy:
+        src: ./files/system/docker-mattermost.service
+        dest: /etc/systemd/system/docker-mattermost.service
+
+    - name: enable and start service mattermost
+      systemd:
+        name: docker-mattermost
+        enabled: yes
+        state: restarted
